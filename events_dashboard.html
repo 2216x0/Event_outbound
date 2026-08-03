@@ -282,10 +282,49 @@ tr:hover .name-link svg{opacity:.6}
         <!-- Events mode -->
         <div id="discoverEventsForm" style="display:none">
           <div class="f">
-            <label>Search Prompt</label>
+            <label>Search Prompt <span class="hint">quick single-shot</span></label>
             <input type="text" id="discover_prompt_ev" placeholder="finance conferences 2026 New York">
           </div>
           <button class="btn-discover" id="btnDiscoverEvents" onclick="startDiscoverEvents()">Find Events</button>
+
+          <div class="sec-title" style="margin-top:14px">Claude Code Discovery</div>
+          <div class="f">
+            <label>Event Types <span class="hint">one per line</span></label>
+            <textarea id="cc_event_types" rows="2" placeholder="conference&#10;summit&#10;forum"></textarea>
+          </div>
+          <div class="f">
+            <label>Sectors / Themes <span class="hint">one per line</span></label>
+            <textarea id="cc_sectors" rows="3" placeholder="private equity&#10;venture capital&#10;institutional investing"></textarea>
+          </div>
+          <div class="f">
+            <label>Regions <span class="hint">one per line</span></label>
+            <textarea id="cc_regions" rows="2" placeholder="United States&#10;Europe&#10;Asia-Pacific"></textarea>
+          </div>
+          <div class="f" style="display:flex;gap:6px">
+            <div style="flex:1"><label>Date From</label><input type="text" id="cc_date_from" placeholder="2026-09"></div>
+            <div style="flex:1"><label>Date To</label><input type="text" id="cc_date_to" placeholder="2027-06"></div>
+          </div>
+          <div class="f">
+            <label>Target Audience <span class="hint">one per line</span></label>
+            <textarea id="cc_target_audience" rows="2" placeholder="institutional investors&#10;LPs and GPs"></textarea>
+          </div>
+          <div class="f">
+            <label>Include Keywords <span class="hint">one per line</span></label>
+            <textarea id="cc_include_keywords" rows="2" placeholder="fundraising&#10;private markets"></textarea>
+          </div>
+          <div class="f">
+            <label>Exclude Keywords <span class="hint">one per line</span></label>
+            <textarea id="cc_exclude_keywords" rows="2" placeholder="webinar&#10;virtual only"></textarea>
+          </div>
+          <div class="f" style="display:flex;gap:6px;align-items:flex-end">
+            <div style="flex:1"><label>Target Count</label><input type="number" id="cc_target_event_count" min="1" max="200" placeholder="40"></div>
+            <label class="oc" onclick="togOC(this)" style="flex:1"><input type="checkbox" id="cc_require_website" checked>Require website</label>
+          </div>
+          <div class="f">
+            <label>Extra Focus <span class="hint">optional, appended to brief</span></label>
+            <input type="text" id="cc_extra_prompt" placeholder="emphasize AVCJ-style Asia PE events">
+          </div>
+          <button class="btn-discover" id="btnDiscoverEventsCC" onclick="startDiscoverEventsCC()">✨ Discover with Claude Code</button>
         </div>
         <!-- Associations mode -->
         <div id="discoverAssocForm">
@@ -442,6 +481,7 @@ const _rawBuf = [], _progLines = {};
 (async () => {
   buildChips(); buildExclChips(); syncOCs();
   await loadCfg();
+  await loadDiscoveryPrefs();
   await pollDiscovered();
   setInterval(pollDiscovered, 4000);
 })();
@@ -1070,6 +1110,51 @@ async function startDiscoverEvents() {
   const prompt=gv('discover_prompt_ev').trim();
   if(!prompt){toast('Enter a search prompt','err');return;}
   _kickDiscover('events', ()=>fetch('/api/discover',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})}), `Discovering events…`);
+}
+
+/* multiline textarea <-> list helpers */
+function linesToList(id){return gv(id).split('\n').map(s=>s.trim()).filter(Boolean);}
+function listToLines(id,arr){const el=document.getElementById(id);if(el)el.value=(arr||[]).join('\n');}
+
+async function loadDiscoveryPrefs(){
+  try{
+    const r=await fetch('/api/config?file=discovery_config.yaml');
+    if(!r.ok)return;
+    const c=await r.json();
+    if(c.error)return;
+    listToLines('cc_event_types',c.event_types);
+    listToLines('cc_sectors',c.sectors);
+    listToLines('cc_regions',c.regions);
+    listToLines('cc_target_audience',c.target_audience);
+    listToLines('cc_include_keywords',c.include_keywords);
+    listToLines('cc_exclude_keywords',c.exclude_keywords);
+    if(c.date_from)document.getElementById('cc_date_from').value=c.date_from;
+    if(c.date_to)document.getElementById('cc_date_to').value=c.date_to;
+    if(c.target_event_count!=null)document.getElementById('cc_target_event_count').value=c.target_event_count;
+    document.getElementById('cc_require_website').checked=c.require_website!==false;
+    syncOCs();
+  }catch(_){}
+}
+
+async function startDiscoverEventsCC(){
+  if(running){toast('Already running','err');return;}
+  const preferences={
+    event_types:linesToList('cc_event_types'),
+    sectors:linesToList('cc_sectors'),
+    regions:linesToList('cc_regions'),
+    target_audience:linesToList('cc_target_audience'),
+    include_keywords:linesToList('cc_include_keywords'),
+    exclude_keywords:linesToList('cc_exclude_keywords'),
+    date_from:gv('cc_date_from').trim(),
+    date_to:gv('cc_date_to').trim(),
+    target_event_count:parseInt(gv('cc_target_event_count'))||40,
+    require_website:document.getElementById('cc_require_website').checked,
+  };
+  if(preferences.sectors.length===0){toast('Add at least one sector','err');return;}
+  const prompt=gv('cc_extra_prompt').trim();
+  _kickDiscover('events',
+    ()=>fetch('/api/discover_cc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({preferences,prompt})}),
+    'Claude Code discovering events…');
 }
 
 async function startDiscoverAssoc() {

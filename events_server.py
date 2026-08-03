@@ -331,6 +331,53 @@ def discover():
     return jsonify({"ok": True})
 
 
+# Fields the discovery-preferences form owns; everything else in
+# discovery_config.yaml (claude_code, output_dir) is preserved on save.
+_DISCOVERY_PREF_KEYS = {
+    "event_types", "sectors", "regions", "date_from", "date_to",
+    "target_audience", "include_keywords", "exclude_keywords",
+    "target_event_count", "require_website",
+}
+
+
+@app.route("/api/discover_cc", methods=["POST"])
+def discover_cc():
+    """Save preferences to discovery_config.yaml, then run Claude Code discovery."""
+    global _proc
+    with _lock:
+        if _proc and _proc.poll() is None:
+            return jsonify({"error": "already running"}), 409
+
+        opts = request.get_json(force=True) or {}
+        prefs = opts.get("preferences", {}) or {}
+        extra = (opts.get("prompt") or "").strip()
+
+        cfg_path = BASE_DIR / "discovery_config.yaml"
+        try:
+            cfg = yaml.safe_load(cfg_path.read_text()) if cfg_path.exists() else {}
+        except Exception:
+            cfg = {}
+        cfg = cfg or {}
+
+        # Merge only the form-owned keys; leave claude_code / output_dir intact.
+        for k in _DISCOVERY_PREF_KEYS:
+            if k in prefs:
+                cfg[k] = prefs[k]
+
+        try:
+            with open(cfg_path, "w") as f:
+                yaml.dump(cfg, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
+        except Exception as e:
+            return jsonify({"error": f"could not save config: {e}"}), 500
+
+        cmd = [PY, "discover_events_cc.py", "--config", "discovery_config.yaml"]
+        if extra:
+            cmd += ["--prompt", extra]
+        _launch(cmd)
+
+    return jsonify({"ok": True})
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--port", type=int, default=5556)
