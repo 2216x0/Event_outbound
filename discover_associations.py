@@ -20,6 +20,13 @@ try:
 except ImportError:
     sys.exit("pip install anthropic")
 
+# Use Claude Code's login if no explicit API key is set.
+try:
+    import claude_auth
+    claude_auth.ensure_token()
+except Exception:
+    pass
+
 
 def p(msg: str):
     print(msg, flush=True)

@@ -32,6 +32,18 @@ if _env_file.exists():
             _k, _v = _line.split("=", 1)
             os.environ.setdefault(_k.strip(), _v.strip())
 
+# Fall back to Claude Code's login for the Anthropic API (direct-API discovery).
+# Sets ANTHROPIC_AUTH_TOKEN in this process env so launched subprocesses inherit it.
+try:
+    import claude_auth
+    if claude_auth.ensure_token():
+        print("  Anthropic auth: using Claude Code login" if not os.environ.get("ANTHROPIC_API_KEY")
+              else "  Anthropic auth: ANTHROPIC_API_KEY")
+    else:
+        print("  Anthropic auth: NONE found (direct-API discovery will fail; log in with `claude`)")
+except Exception as _e:
+    print(f"  Anthropic auth: claude_auth unavailable ({_e})")
+
 app = Flask(__name__)
 BASE_DIR = Path(__file__).parent
 PY = sys.executable

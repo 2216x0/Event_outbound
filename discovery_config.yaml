@@ -1,82 +1,42 @@
-# ---------------------------------------------------------------------------
-# Event Discovery preferences.
-#
-# This file is the single input to automated discovery. Edit it, then run:
-#     python3 discover_events_cc.py
-#
-# The runner turns these preferences into a research brief and hands it to
-# Claude Code (headless `claude -p`), which uses the `discover-events` skill
-# to search the web and return a structured event list into
-# outputs/discovered/events_<timestamp>.json (same shape the dashboard reads).
-# ---------------------------------------------------------------------------
-
-# What kind of events to look for. Free text — the more specific, the better.
 event_types:
-  - conference
-  - summit
-  - forum
-  - symposium
-
-# Sectors / themes the events must be about.
+- conference
+- summit
+- forum
+- symposium
 sectors:
-  - private equity
-  - venture capital
-  - institutional investing
-  - asset management
-  - hedge funds
-  - capital markets
-  - family offices / LPs
-
-# Geographies to focus on. Use "global" for no geographic filter.
+- private equity
+- venture capital
+- institutional investing
+- asset management
+- hedge funds
+- capital markets
+- family offices / LPs
 regions:
-  - United States
-  - Europe
-  - Asia-Pacific
-
-# Time window for when the events take place (inclusive).
-# Format: YYYY-MM or YYYY-MM-DD. Leave date_to blank for "open ended".
+- United States
+- Europe
+- Asia-Pacific
 date_from: 2026-09
 date_to: 2027-06
-
-# Who the event should attract — used to keep the list outreach-relevant.
 target_audience:
-  - institutional investors
-  - LPs and GPs
-  - allocators
-  - fund managers
-
-# Extra keywords to bias the search toward (optional).
+- institutional investors
+- LPs and GPs
+- allocators
+- fund managers
 include_keywords:
-  - fundraising
-  - deal sourcing
-  - private markets
-  - alternatives
-
-# Events matching any of these are dropped (optional).
+- fundraising
+- deal sourcing
+- private markets
+- alternatives
 exclude_keywords:
-  - webinar
-  - virtual only
-  - crypto retail
-  - job fair
-
-# How many distinct events to aim for. The runner asks Claude Code to be
-# exhaustive up to roughly this many high-quality matches.
+- webinar
+- virtual only
+- crypto retail
+- job fair
 target_event_count: 40
-
-# Only keep events with an official website URL (needed for the crawl step).
 require_website: true
-
-# ---------------------------------------------------------------------------
-# Claude Code invocation settings.
-# ---------------------------------------------------------------------------
 claude_code:
-  # The CLI binary. "claude" if it's on PATH.
   binary: claude
   model: claude-opus-4-8
-  # Hard ceiling on agent turns so a run can't loop forever.
   max_turns: 40
-  # Seconds before the runner gives up on the CLI call.
   timeout_seconds: 900
-
-# Where discovered event JSON files are written.
 output_dir: outputs/discovered
