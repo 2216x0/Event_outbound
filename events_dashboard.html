@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Events Pipeline</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+:root{
+  /* ── backgrounds ── */
+  --bg:#08070F;--s1:#0F0D1C;--s2:#15132A;--s3:#1C1A34;
+  --b1:#26234A;--b2:#312D5C;--b3:#3D386E;
+  /* ── text ── */
+  --tx:#EDE8FF;--dim:#9B91CC;--muted:#4A4678;
+  /* ── accent: vivid violet ── */
+  --ac:#8B5CF6;--ac2:#C4B5FD;
+  --ac-bg:rgba(139,92,246,.12);--ac-bd:rgba(139,92,246,.30);--ac-glow:rgba(139,92,246,.30);
+  /* ── success: emerald ── */
+  --gn:#34D399;--gn-bg:rgba(52,211,153,.10);--gn-bd:rgba(52,211,153,.28);
+  /* ── error: rose ── */
+  --rd:#F87171;--rd-bg:rgba(248,113,113,.10);--rd-bd:rgba(248,113,113,.28);
+  /* ── warning: amber ── */
+  --yw:#FBBF24;--yw-bg:rgba(251,191,36,.10);--yw-bd:rgba(251,191,36,.28);
+  /* ── info: cyan ── */
+  --or:#22D3EE;--or-bg:rgba(34,211,238,.09);--or-bd:rgba(34,211,238,.25);
+  /* ── category chips use cyan ── */
+  --cat:#22D3EE;--cat-bg:rgba(34,211,238,.09);--cat-bd:rgba(34,211,238,.25);
+  --mono:'JetBrains Mono','Fira Code',Consolas,monospace;
+  --r:8px;--r-sm:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--tx);display:flex;flex-direction:column;font-size:13px;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--b2);border-radius:4px}::-webkit-scrollbar-thumb:hover{background:var(--b3)}
+input,select,button,textarea{font-family:inherit}
+a{color:var(--ac2);text-decoration:none}
+
+/* ── HEADER ─────────────────────────────── */
+.hdr{height:52px;padding:0 20px;display:flex;align-items:center;gap:12px;flex-shrink:0;background:linear-gradient(180deg,rgba(18,14,38,.99) 0%,rgba(13,11,28,.99) 100%);border-bottom:1px solid var(--b1);box-shadow:0 1px 0 rgba(139,92,246,.08)}
+.logo{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#8B5CF6,#EC4899);display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 0 18px rgba(139,92,246,.4),0 0 40px rgba(236,72,153,.15)}
+.brand b{font-size:14px;font-weight:700;color:var(--tx)}
+.brand small{font-size:11px;color:var(--dim);margin-left:6px}
+.hdr-spacer{flex:1}
+.status-pill{display:flex;align-items:center;gap:7px;padding:5px 12px;background:var(--s2);border:1px solid var(--b1);border-radius:20px;font-size:12px;font-weight:500;color:var(--dim)}
+.sdot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:all .3s}
+.sdot.run{background:var(--gn);box-shadow:0 0 0 3px var(--gn-bg);animation:sdot-pulse 1.4s ease-in-out infinite}
+.sdot.done{background:var(--gn)}.sdot.err{background:var(--rd)}
+.status-ts{font-size:10px;color:var(--muted);margin-left:2px}
+@keyframes sdot-pulse{0%,100%{box-shadow:0 0 0 3px var(--gn-bg)}50%{box-shadow:0 0 0 6px transparent}}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r-sm);border:none;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn:disabled{opacity:.28;cursor:not-allowed}
+.btn-stop{background:var(--rd-bg);color:var(--rd);border:1px solid var(--rd-bd)}
+.btn-stop:hover:not(:disabled){background:rgba(239,68,68,.16)}
+
+/* ── STEPPER ─────────────────────────────── */
+.steps-track{height:54px;padding:0 24px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,var(--s2) 0%,var(--s1) 100%);border-bottom:1px solid var(--b1);flex-shrink:0}
+.steps-inner{display:flex;align-items:center;max-width:680px;width:100%}
+.step-pill{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;position:relative;cursor:default}
+/* connector line */
+.step-pill::after{content:'';position:absolute;left:calc(50% + 15px);top:10px;width:calc(100% - 30px);height:1.5px;background:var(--b2);transition:background .3s}
+.step-pill:last-child::after{display:none}
+.step-pill.done::after{background:var(--gn-bd)}
+.step-pill.active::after{background:var(--b2)}
+/* node */
+.sn{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--muted);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:var(--muted);background:var(--bg);transition:all .25s;position:relative;z-index:1}
+.slbl{font-size:9px;font-weight:600;color:var(--muted);white-space:nowrap;letter-spacing:.02em;transition:color .25s}
+/* pending = default */
+/* active */
+.step-pill.active .sn{border-color:var(--ac);color:var(--ac);background:var(--ac-bg);box-shadow:0 0 0 3px var(--ac-glow),0 0 0 5px rgba(99,102,241,.06);animation:ring-pulse 2s ease-in-out infinite}
+.step-pill.active .slbl{color:var(--ac2);font-weight:700}
+@keyframes ring-pulse{0%,100%{box-shadow:0 0 0 3px var(--ac-glow),0 0 0 5px rgba(139,92,246,.06)}50%{box-shadow:0 0 0 5px rgba(139,92,246,.12),0 0 0 9px rgba(139,92,246,.02)}}
+/* done */
+.step-pill.done .sn{border-color:var(--gn);background:var(--gn);color:#fff;font-size:9px}
+.step-pill.done .slbl{color:var(--gn)}
+/* error */
+.step-pill.err .sn{border-color:var(--rd);background:var(--rd);color:#fff}
+.step-pill.err .slbl{color:var(--rd)}
+
+/* ── LAYOUT ─────────────────────────────── */
+.body{display:flex;flex:1;overflow:hidden;min-height:0}
+
+/* ── LEFT PANEL ─────────────────────────── */
+.left{width:272px;flex-shrink:0;display:flex;flex-direction:column;background:var(--s1);border-right:1px solid var(--b1);overflow:hidden}
+.left-scroll{flex:1;overflow-y:auto;padding:16px 14px 8px}
+.sec{margin-bottom:20px}
+.sec-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--dim);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--b1)}
+.f{margin-bottom:9px}
+.f label{display:block;font-size:11px;color:var(--dim);margin-bottom:4px;font-weight:600}
+.f label .hint{font-weight:400;color:var(--muted);margin-left:4px;font-size:10px}
+.f input[type=text],.f input[type=number],.f textarea{width:100%;padding:6px 9px;background:var(--s2);border:1px solid var(--b1);border-radius:var(--r-sm);color:var(--tx);font-size:12px;outline:none;transition:border-color .15s;resize:none}
+.f input:focus,.f textarea:focus{border-color:var(--ac-bd)}
+.f input::placeholder,.f textarea::placeholder{color:var(--muted)}
+/* seniority chips */
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{padding:3px 8px;background:var(--s2);border:1px solid var(--b1);border-radius:4px;cursor:pointer;font-size:11px;color:var(--muted);transition:all .12s;user-select:none}
+.chip.on{background:var(--ac-bg);border-color:var(--ac-bd);color:var(--ac2);font-weight:600}
+/* exclusion chips — red = this keyword IS being excluded (on = active exclusion) */
+.excl-chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
+.excl-chip{display:flex;align-items:center;gap:4px;padding:3px 8px;background:var(--s2);border:1px solid var(--b1);border-radius:4px;cursor:pointer;font-size:11px;color:var(--muted);user-select:none;transition:all .12s}
+.excl-chip::before{content:'';width:6px;height:6px;border-radius:50%;border:1.5px solid var(--muted);flex-shrink:0;transition:all .12s}
+.excl-chip.on{background:var(--rd-bg);border-color:var(--rd-bd);color:var(--rd);font-weight:600}
+.excl-chip.on::before{background:var(--rd);border-color:var(--rd)}
+/* pipeline option toggles */
+.opt-chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.oc{display:flex;align-items:center;gap:5px;padding:4px 9px;background:var(--s2);border:1px solid var(--b1);border-radius:4px;cursor:pointer;font-size:11px;color:var(--muted);user-select:none;transition:all .12s}
+.oc::before{content:'';width:6px;height:6px;border-radius:2px;border:1.5px solid var(--muted);flex-shrink:0;transition:all .12s}
+.oc input{display:none}
+.oc.on{background:var(--gn-bg);border-color:var(--gn-bd);color:var(--gn);font-weight:600}
+.oc.on::before{background:var(--gn);border-color:var(--gn)}
+.oc.warn-toggle.on{background:var(--yw-bg);border-color:var(--yw-bd);color:var(--yw)}
+.oc.warn-toggle.on::before{background:var(--yw);border-color:var(--yw)}
+/* sticky footer */
+.left-bottom{flex-shrink:0;background:var(--s1);border-top:1px solid var(--b1)}
+.run-opts{padding:12px 14px 8px}
+.run-opts-hdr{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--dim);margin-bottom:8px}
+.oi{width:100%;padding:6px 9px;background:var(--s2);border:1px solid var(--b1);border-radius:var(--r-sm);color:var(--tx);font-size:12px;outline:none;transition:border-color .15s}
+.oi:focus{border-color:var(--ac-bd)}.oi::placeholder{color:var(--muted)}
+.left-footer{padding:10px 14px 12px;display:flex;align-items:center;gap:8px}
+.btn-save{flex:1;padding:8px;background:linear-gradient(135deg,rgba(139,92,246,.16),rgba(236,72,153,.08));color:var(--ac2);border:1px solid rgba(139,92,246,.28);border-radius:var(--r-sm);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+.btn-save:hover{background:linear-gradient(135deg,rgba(139,92,246,.26),rgba(236,72,153,.14));box-shadow:0 0 12px rgba(139,92,246,.2)}
+.saved{font-size:11px;color:var(--gn);opacity:0;transition:opacity .3s;font-weight:600;white-space:nowrap}
+.saved.show{opacity:1}
+
+/* ── RIGHT ─────────────────────────────── */
+.right{flex:1;display:flex;flex-direction:column;min-width:0;background:var(--bg)}
+
+/* ── EVENTS TABLE ─────────────────────── */
+.events-pane{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.events-toolbar{display:flex;align-items:center;gap:10px;padding:10px 20px;border-bottom:1px solid var(--b1);flex-shrink:0;background:var(--s1)}
+.events-toolbar-title{font-size:13px;font-weight:600;color:var(--tx)}
+.events-count{font-size:12px;color:var(--muted);font-family:var(--mono)}
+.events-sel-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;background:var(--ac-bg);border:1px solid var(--ac-bd);border-radius:12px;font-size:11px;font-weight:700;color:var(--ac2)}
+.tbar-spacer{flex:1}
+.btn-crawl{display:flex;align-items:center;gap:7px;padding:7px 16px;background:linear-gradient(135deg,#7C3AED,#9333EA);color:#fff;border:none;border-radius:var(--r-sm);font-size:12px;font-weight:600;cursor:pointer;transition:all .18s;white-space:nowrap;box-shadow:0 2px 12px rgba(124,58,237,.25)}
+.btn-crawl:hover:not(:disabled){box-shadow:0 0 22px rgba(147,51,234,.45),0 4px 16px rgba(124,58,237,.3);transform:translateY(-1px)}
+.btn-crawl:disabled{opacity:.28;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-count{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;background:rgba(255,255,255,.18);border-radius:9px;font-size:10px;font-weight:700}
+
+.events-table-wrap{flex:1;overflow-y:auto}
+.events-table{width:100%;border-collapse:collapse;font-size:12px}
+.events-table thead th{position:sticky;top:0;background:var(--s3);color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.07em;font-size:10px;padding:8px 12px;text-align:left;border-bottom:1px solid var(--b2);z-index:1;user-select:none}
+.events-table thead th.cb-th{width:38px;padding:8px 10px}
+.events-table tbody tr{cursor:pointer;transition:background .08s}
+.events-table tbody tr:hover td{background:var(--s2)}
+.events-table tbody tr.selected td{background:rgba(139,92,246,.08)}
+.events-table tbody tr.selected td:first-child{box-shadow:inset 3px 0 0 var(--ac)}
+.events-table tbody tr.selected:hover td{background:rgba(139,92,246,.13)}
+.events-table td{padding:9px 12px;color:var(--dim);border-bottom:1px solid var(--b1);vertical-align:middle}
+/* columns */
+.cb-col{width:38px;padding:9px 10px;vertical-align:middle}
+.row-cb{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--b2);display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:transparent;background:transparent;transition:all .12s;flex-shrink:0}
+.row-cb.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.name-col{color:var(--tx);font-weight:600;max-width:200px;vertical-align:middle}
+.name-link{color:var(--tx);display:flex;align-items:center;gap:5px;line-height:1.35}
+.name-link:hover{color:var(--ac2)}
+.name-link svg{opacity:0;flex-shrink:0;transition:opacity .15s}
+tr:hover .name-link svg{opacity:.6}
+.date-col{white-space:nowrap;color:var(--dim);font-size:11px;font-family:var(--mono);vertical-align:middle;min-width:80px}
+.loc-col{color:var(--dim);font-size:11px;white-space:nowrap;max-width:130px;vertical-align:middle}
+.desc-col{color:var(--dim);font-size:11px;max-width:240px;line-height:1.45;vertical-align:middle}
+.desc-clamp{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cat-col{max-width:140px;vertical-align:middle}
+.cat-pill{display:inline-block;padding:2px 6px;background:var(--cat-bg);border:1px solid var(--cat-bd);border-radius:3px;color:var(--cat);font-size:10px;margin:1px 2px 1px 0;white-space:nowrap;font-weight:500}
+.cat-more{display:inline-block;padding:2px 5px;background:var(--s3);border:1px solid var(--b2);border-radius:3px;color:var(--muted);font-size:10px;font-weight:600}
+
+/* ── EMPTY STATE ─────────────────────── */
+.empty-pane{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:var(--muted)}
+.empty-icon{width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,rgba(139,92,246,.14),rgba(236,72,153,.06));border:1px solid rgba(139,92,246,.24);display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 24px rgba(139,92,246,.12)}
+.empty-pane h3{font-size:15px;font-weight:600;color:var(--dim)}
+.empty-pane p{font-size:12px;color:var(--muted);text-align:center;max-width:340px;line-height:1.7}
+.step-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;font-family:var(--mono)}
+.step-badge.ac{background:var(--ac-bg);border:1px solid var(--ac-bd);color:var(--ac2)}
+.step-badge.gn{background:var(--gn-bg);border:1px solid var(--gn-bd);color:var(--gn)}
+
+/* ── FEED ─────────────────────────────── */
+.feed-pane{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.feed-toolbar{display:flex;align-items:center;gap:10px;padding:10px 20px;border-bottom:1px solid var(--b1);flex-shrink:0;background:var(--s1)}
+.feed-title{font-size:13px;font-weight:600;color:var(--tx)}
+.feed-scroll{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:2px}
+.step-block{position:relative;padding-left:18px;margin-bottom:4px}
+.step-block::before{content:'';position:absolute;left:6px;top:34px;bottom:0;width:1px;background:linear-gradient(180deg,var(--b2) 0%,transparent 100%)}
+.step-block:last-child::before{display:none}
+.step-block.done::before{background:linear-gradient(180deg,var(--gn-bd) 0%,transparent 100%)}
+.step-block.err::before{background:linear-gradient(180deg,var(--rd-bd) 0%,transparent 100%)}
+.step-hdr{display:flex;align-items:center;gap:9px;padding:8px 12px;border-radius:var(--r);background:var(--s2);border:1px solid var(--b1);margin-bottom:4px}
+.step-block.done .step-hdr{border-color:var(--gn-bd);background:rgba(34,197,94,.04)}
+.step-block.err .step-hdr{border-color:var(--rd-bd);background:rgba(239,68,68,.04)}
+.step-num-badge{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:var(--ac-bg);border:1.5px solid var(--ac-bd);color:var(--ac2)}
+.step-block.done .step-num-badge{background:var(--gn-bg);border-color:var(--gn-bd);color:var(--gn)}
+.step-block.err .step-num-badge{background:var(--rd-bg);border-color:var(--rd-bd);color:var(--rd)}
+.step-name{font-size:12px;font-weight:600;color:var(--tx)}
+.step-status-lbl{margin-left:auto;font-size:11px;font-weight:600;color:var(--muted)}
+.step-block.done .step-status-lbl{color:var(--gn)}.step-block.err .step-status-lbl{color:var(--rd)}
+.spin{display:inline-block;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.evlog{padding:2px 0 8px 2px;display:flex;flex-direction:column;gap:1px}
+.ev{display:flex;align-items:baseline;gap:7px;padding:3px 9px;border-radius:4px;font-size:12px;color:var(--dim);line-height:1.5}
+.ev-ic{width:12px;flex-shrink:0;text-align:center;font-size:10px;opacity:.8}
+.ev-tx{flex:1;min-width:0}
+.ev.ok{color:#4ADE80}.ev.warn{color:var(--yw)}
+.ev.err{color:var(--rd);background:var(--rd-bg);border:1px solid rgba(239,68,68,.12);padding:4px 9px}
+.ev.hint{color:var(--muted);font-size:11px;padding-left:30px}
+.pline{display:flex;align-items:center;gap:7px;padding:3px 9px;font-size:12px;color:var(--ac2)}
+.pdot{width:5px;height:5px;border-radius:50%;background:var(--ac);animation:sdot-pulse 1.2s ease-in-out infinite;flex-shrink:0}
+.sum-row{display:flex;flex-wrap:wrap;gap:5px;padding:3px 9px 5px}
+.sum-chip{padding:2px 9px;border-radius:4px;font-size:11px;font-weight:600}
+.sum-chip.gn{background:var(--gn-bg);border:1px solid var(--gn-bd);color:var(--gn)}
+.sum-chip.ac{background:var(--ac-bg);border:1px solid var(--ac-bd);color:var(--ac2)}
+.sum-chip.yw{background:var(--yw-bg);border:1px solid var(--yw-bd);color:var(--yw)}
+.sum-chip.rd{background:var(--rd-bg);border:1px solid var(--rd-bd);color:var(--rd)}
+/* preview */
+.preview-wrap{margin:8px 0 6px;border-radius:var(--r);border:1px solid var(--b2);overflow:hidden}
+.preview-hdr{display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:var(--s2);border-bottom:1px solid var(--b1);font-size:11px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
+.preview-count{color:var(--ac2);font-family:var(--mono)}
+.preview-scroll{max-height:280px;overflow-y:auto}
+.preview-table{width:100%;border-collapse:collapse;font-size:11px}
+.preview-table th{position:sticky;top:0;background:var(--s3);color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:10px;padding:5px 9px;text-align:left;border-bottom:1px solid var(--b2);z-index:1}
+.preview-table td{padding:4px 9px;color:var(--dim);border-bottom:1px solid var(--b1);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.preview-table tr:hover td{background:var(--s2);color:var(--tx)}
+.preview-table td.name-col{color:var(--tx);font-weight:500}
+.ev-badge{display:inline-block;padding:1px 5px;border-radius:3px;background:var(--ac-bg);border:1px solid var(--ac-bd);color:var(--ac2);font-size:10px}
+.btn-continue{display:flex;align-items:center;gap:7px;margin:10px 8px 4px;padding:9px 16px;background:linear-gradient(135deg,rgba(52,211,153,.13),rgba(52,211,153,.05));border:1px solid var(--gn-bd);border-radius:var(--r-sm);color:var(--gn);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;justify-content:center;box-shadow:0 2px 10px rgba(52,211,153,.1)}
+.btn-continue:hover{background:linear-gradient(135deg,rgba(52,211,153,.22),rgba(52,211,153,.12));box-shadow:0 0 16px rgba(52,211,153,.2)}
+/* toast */
+.toast{position:fixed;bottom:18px;right:18px;z-index:99;padding:8px 14px;border-radius:var(--r);font-size:12px;font-weight:500;background:var(--s3);border:1px solid var(--b2);box-shadow:0 8px 32px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04);opacity:0;transform:translateY(8px);transition:all .22s;pointer-events:none}
+.toast.show{opacity:1;transform:none}.toast.ok{border-color:var(--gn-bd);color:var(--gn)}.toast.err{border-color:var(--rd-bd);color:var(--rd)}
+/* ── MODE TOGGLE ──────────────────────────── */
+.mode-bar{display:flex;align-items:center;gap:3px;padding:3px;background:var(--s2);border:1px solid var(--b1);border-radius:7px;margin-left:12px}
+.mode-btn{padding:4px 12px;border-radius:5px;border:none;font-size:12px;font-weight:600;cursor:pointer;color:var(--dim);background:transparent;transition:all .15s}
+.mode-btn.active{background:var(--ac);color:#fff;box-shadow:0 2px 8px rgba(139,92,246,.3)}
+.btn-discover{width:100%;padding:8px;margin-top:4px;background:linear-gradient(135deg,rgba(139,92,246,.16),rgba(236,72,153,.08));color:var(--ac2);border:1px solid rgba(139,92,246,.28);border-radius:var(--r-sm);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+.btn-discover:hover:not(:disabled){background:linear-gradient(135deg,rgba(139,92,246,.26),rgba(236,72,153,.14));box-shadow:0 0 12px rgba(139,92,246,.2)}
+.btn-discover:disabled{opacity:.28;cursor:not-allowed}
+.btn-dl{display:inline-flex;align-items:center;gap:7px;margin:10px 8px 4px;padding:9px 16px;background:linear-gradient(135deg,rgba(34,211,238,.13),rgba(34,211,238,.05));border:1px solid var(--or-bd);border-radius:var(--r-sm);color:var(--or);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;text-decoration:none}
+.btn-dl:hover{background:linear-gradient(135deg,rgba(34,211,238,.22),rgba(34,211,238,.1));box-shadow:0 0 14px rgba(34,211,238,.15)}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="logo">🎯</div>
+  <div class="brand">
+    <b>Outbound Pipeline</b>
+    <small>Discover → Crawl → Apollo → Instantly</small>
+  </div>
+  <div class="mode-bar">
+    <button id="modeEvents" class="mode-btn active" onclick="setMode('events')">Events</button>
+    <button id="modeAssoc" class="mode-btn" onclick="setMode('associations')">Associations</button>
+  </div>
+  <div class="hdr-spacer"></div>
+  <div class="status-pill">
+    <div class="sdot" id="sdot"></div>
+    <span id="stxt">Idle</span>
+    <span class="status-ts" id="statusTs"></span>
+  </div>
+  <button class="btn btn-stop" id="stopBtn" onclick="stopPipeline()" disabled style="margin-left:8px">
+    <svg width="9" height="9" viewBox="0 0 9 9"><rect width="9" height="9" rx="1.5" fill="currentColor"/></svg>
+    Stop
+  </button>
+</header>
+
+<!-- STEPPER -->
+<div class="steps-track">
+  <div class="steps-inner">
+    <div class="step-pill done" id="sp-d"><div class="sn" data-lbl="D">✓</div><span class="slbl">Discover</span></div>
+    <div class="step-pill" id="sp-c"><div class="sn" data-lbl="C">C</div><span class="slbl">Crawl</span></div>
+    <div class="step-pill" id="sp1"><div class="sn" data-lbl="1">1</div><span class="slbl">Apollo</span></div>
+    <div class="step-pill" id="sp2"><div class="sn" data-lbl="2">2</div><span class="slbl">Clean</span></div>
+    <div class="step-pill" id="sp3"><div class="sn" data-lbl="3">3</div><span class="slbl">Launch</span></div>
+    <div class="step-pill" id="sp4"><div class="sn" data-lbl="4">4</div><span class="slbl">Verify</span></div>
+  </div>
+</div>
+
+<div class="body">
+
+  <!-- LEFT PANEL -->
+  <aside class="left">
+    <div class="left-scroll">
+
+      <div class="sec" id="discoverSec">
+        <div class="sec-title">Discover</div>
+        <!-- Events mode -->
+        <div id="discoverEventsForm" style="display:none">
+          <div class="f">
+            <label>Search Prompt</label>
+            <input type="text" id="discover_prompt_ev" placeholder="finance conferences 2026 New York">
+          </div>
+          <button class="btn-discover" id="btnDiscoverEvents" onclick="startDiscoverEvents()">Find Events</button>
+        </div>
+        <!-- Associations mode -->
+        <div id="discoverAssocForm">
+          <div class="f">
+            <label>City</label>
+            <input type="text" id="assoc_city" placeholder="Hong Kong">
+          </div>
+          <div class="f">
+            <label>ICP Focus <span class="hint">optional</span></label>
+            <input type="text" id="assoc_icp" placeholder="private equity, hedge funds">
+          </div>
+          <button class="btn-discover" id="btnDiscoverAssoc" onclick="startDiscoverAssoc()">Find Associations</button>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-title">Apollo</div>
+        <div class="f">
+          <label>Contacts per Event <span class="hint">(0 = no cap)</span></label>
+          <input type="number" id="contacts_per_event" min="0" max="500" placeholder="200">
+        </div>
+        <div class="f">
+          <label>Seniority <span class="hint">(blank = all)</span></label>
+          <div class="chips" id="chips"></div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-title">Industry Filter</div>
+        <div class="f">
+          <label>Include Industries <span class="hint">one per line</span></label>
+          <textarea id="incl_industries" rows="3" placeholder="Financial Services&#10;Private Equity&#10;Asset Management"></textarea>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-title">Title Exclusions <span style="font-size:9px;font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0;margin-left:2px">filled = excluded</span></div>
+        <div class="excl-chips" id="exclChips"></div>
+        <input type="text" id="excl_custom" placeholder="+ add keyword, press Enter" style="width:100%;padding:5px 8px;background:var(--s2);border:1px solid var(--b1);border-radius:4px;color:var(--tx);font-size:11px;outline:none;margin-top:2px" onkeydown="addExclCustom(event)">
+      </div>
+
+      <div class="sec">
+        <div class="sec-title">Output</div>
+        <div class="f">
+          <label>Contact Type</label>
+          <input type="text" id="contact_type" placeholder="Event Speaker — Investment Management">
+        </div>
+        <div class="f">
+          <label>Output Prefix</label>
+          <input type="text" id="output_prefix" placeholder="events">
+        </div>
+      </div>
+
+    </div><!-- /left-scroll -->
+
+    <!-- sticky bottom -->
+    <div class="left-bottom">
+      <div class="run-opts">
+        <div class="run-opts-hdr">Pipeline Options</div>
+        <div class="opt-chips">
+          <label class="oc warn-toggle" onclick="togOC(this)"><input type="checkbox" id="o_dryrun">Dry Run</label>
+          <label class="oc" onclick="togOC(this)"><input type="checkbox" id="o_yes" checked>Auto-confirm</label>
+          <label class="oc warn-toggle" onclick="togOC(this)"><input type="checkbox" id="o_skipverify">Skip Verify</label>
+        </div>
+        <input class="oi" type="text" id="o_campaign" placeholder="Campaign name (optional)">
+      </div>
+      <div class="left-footer">
+        <button class="btn-save" onclick="saveConfig()">Save Config</button>
+        <span class="saved" id="savedBadge">✓ Saved</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- RIGHT PANEL -->
+  <div class="right" id="rightPanel">
+
+    <!-- Empty state -->
+    <div class="empty-pane" id="emptyPane">
+      <div class="empty-icon" id="emptyIcon">🔍</div>
+      <h3 id="emptyHeading">Waiting for events</h3>
+      <p id="emptyMsg">
+        Enter a prompt in the left panel and click <strong>Find Events</strong>, or ask Claude Code to push results automatically.
+      </p>
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:4px">
+        <span class="step-badge ac">1 Discover</span>
+        <span style="color:var(--muted)">→</span>
+        <span class="step-badge ac">2 Click rows</span>
+        <span style="color:var(--muted)">→</span>
+        <span class="step-badge gn">3 Crawl &amp; Apollo</span>
+      </div>
+    </div>
+
+    <!-- Events table -->
+    <div class="events-pane" id="eventsPane" style="display:none">
+      <div class="events-toolbar">
+        <div class="events-toolbar-title" id="eventsToolbarTitle">Discovered Events</div>
+        <div class="events-count" id="eventsCount">0 events</div>
+        <div class="events-sel-badge" id="selBadge" style="display:none">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span id="selCount">0</span> selected
+        </div>
+        <div class="tbar-spacer"></div>
+        <button class="btn-crawl" id="crawlBtn" onclick="startCrawl()" disabled>
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-6.219-8.56"/><path d="M21 3v4h-4"/></svg>
+          Crawl Selected
+          <span class="btn-count" id="crawlCount" style="display:none">0</span>
+        </button>
+      </div>
+      <div class="events-table-wrap">
+        <table class="events-table">
+          <thead id="eventsHead">
+            <tr>
+              <th class="cb-th"></th>
+              <th>Event</th>
+              <th>Date</th>
+              <th>Location</th>
+              <th>Description</th>
+              <th>Categories</th>
+            </tr>
+          </thead>
+          <tbody id="eventsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Feed -->
+    <div class="feed-pane" id="feedPane" style="display:none">
+      <div class="feed-toolbar">
+        <div class="feed-title" id="feedTitle">Running…</div>
+        <div class="tbar-spacer"></div>
+        <button class="btn btn-stop" onclick="stopPipeline()" id="feedStopBtn" style="font-size:11px;padding:5px 10px">Stop</button>
+      </div>
+      <div class="feed-scroll" id="feedScroll"></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SENIORITIES = [{v:'c_suite',l:'C-Suite'},{v:'partner',l:'Partner'},{v:'vp',l:'VP'},{v:'head',l:'Head'},{v:'director',l:'Director'},{v:'manager',l:'Manager'},{v:'senior',l:'Senior'},{v:'owner',l:'Owner'},{v:'founder',l:'Founder'}];
+const EXCL_PRESETS = [{v:'moderator',l:'Moderator'},{v:'emcee',l:'Emcee/Host'},{v:'marketing',l:'Marketing'},{v:'recruiter',l:'Recruiter'},{v:'journalist',l:'Journalist'}];
+
+let running = false, evtSrc = null;
+let currentMode = 'events';
+let senioritiesSelected = new Set();
+let exclSelected = new Set(['moderator','emcee']);
+let allEvents = [], selectedIndices = new Set();
+let curStep = 0, curPhase = 'idle';
+let matchFound = 0, matchMiss = 0, matchStarted = false;
+const _rawBuf = [], _progLines = {};
+
+(async () => {
+  buildChips(); buildExclChips(); syncOCs();
+  await loadCfg();
+  await pollDiscovered();
+  setInterval(pollDiscovered, 4000);
+})();
+
+/* ── CHIPS ─────────────────────────────── */
+function buildChips() {
+  document.getElementById('chips').innerHTML = SENIORITIES.map(s =>
+    `<div class="chip" data-v="${s.v}" onclick="togChip(this)">${s.l}</div>`).join('');
+}
+function togChip(el) {
+  const v = el.dataset.v; el.classList.toggle('on');
+  senioritiesSelected.has(v) ? senioritiesSelected.delete(v) : senioritiesSelected.add(v);
+}
+function buildExclChips() {
+  document.getElementById('exclChips').innerHTML = EXCL_PRESETS.map(s =>
+    `<div class="excl-chip${exclSelected.has(s.v)?' on':''}" data-v="${s.v}" onclick="togExcl(this)">${s.l}</div>`).join('');
+}
+function togExcl(el) {
+  const v = el.dataset.v; el.classList.toggle('on');
+  exclSelected.has(v) ? exclSelected.delete(v) : exclSelected.add(v);
+}
+function addExclCustom(e) {
+  if (e.key !== 'Enter') return;
+  const inp = e.target; const kw = inp.value.trim(); if (!kw) return;
+  exclSelected.add(kw.toLowerCase());
+  const chip = document.createElement('div');
+  chip.className = 'excl-chip on'; chip.dataset.v = kw.toLowerCase();
+  chip.textContent = kw;
+  chip.onclick = function() { togExcl(this); };
+  document.getElementById('exclChips').appendChild(chip);
+  inp.value = '';
+}
+function togOC(el) {
+  const cb = el.querySelector('input'); if (!cb) return;
+  el.classList.toggle('on', !cb.checked);
+}
+function syncOCs() {
+  document.querySelectorAll('.oc').forEach(el => {
+    const cb = el.querySelector('input'); if (cb) el.classList.toggle('on', cb.checked);
+  });
+}
+
+/* ── CONFIG ─────────────────────────────── */
+async function loadCfg() {
+  try {
+    const r = await fetch('/api/config?file=events_config.yaml');
+    const c = await r.json(); if (c.error) return;
+    sv('contacts_per_event', c.contacts_per_event ?? 200);
+    senioritiesSelected = new Set(c.apollo_seniorities || []);
+    document.querySelectorAll('.chip').forEach(el => el.classList.toggle('on', senioritiesSelected.has(el.dataset.v)));
+    sv('incl_industries', (c.include_industries || []).join('\n'));
+    const presetVals = new Set(EXCL_PRESETS.map(p => p.v));
+    exclSelected = new Set(); const custom = [];
+    (c.exclude_title_keywords || []).forEach(kw => {
+      const k = kw.toLowerCase().trim();
+      if (presetVals.has(k)) exclSelected.add(k); else custom.push(kw);
+    });
+    buildExclChips();
+    // restore custom excl chips
+    custom.forEach(kw => {
+      exclSelected.add(kw.toLowerCase());
+      const chip = document.createElement('div');
+      chip.className = 'excl-chip on'; chip.dataset.v = kw.toLowerCase();
+      chip.textContent = kw; chip.onclick = function(){togExcl(this);};
+      document.getElementById('exclChips').appendChild(chip);
+    });
+    sv('contact_type', c.contact_type || '');
+    sv('output_prefix', c.output_prefix || 'events');
+  } catch(_) {}
+}
+function getCfg() {
+  const preset = [...exclSelected];
+  return {
+    contact_type: gv('contact_type') || 'Event Speaker — Investment Management',
+    events: [],
+    contacts_per_event: parseInt(gv('contacts_per_event')) || 200,
+    apollo_seniorities: [...senioritiesSelected],
+    exclude_title_keywords: preset,
+    include_industries: gv('incl_industries').split('\n').map(s=>s.trim()).filter(Boolean),
+    output_prefix: gv('output_prefix') || 'events',
+  };
+}
+async function saveConfig() {
+  try {
+    const r = await fetch('/api/config?file=events_config.yaml', {
+      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(getCfg())
+    });
+    const j = await r.json(); if (j.error) { toast(j.error,'err'); return; }
+    const b = document.getElementById('savedBadge'); b.classList.add('show');
+    setTimeout(() => b.classList.remove('show'), 2000);
+  } catch(e) { toast('Save error','err'); }
+}
+
+/* ── DATE FORMAT ─────────────────────────── */
+function fmtDate(d) {
+  if (!d) return '—';
+  return d
+    .replace(/January/g,'Jan').replace(/February/g,'Feb').replace(/March/g,'Mar')
+    .replace(/April/g,'Apr').replace(/June/g,'Jun')
+    .replace(/July/g,'Jul').replace(/August/g,'Aug').replace(/September/g,'Sep')
+    .replace(/October/g,'Oct').replace(/November/g,'Nov').replace(/December/g,'Dec')
+    .replace(/,?\s*\d{4}/g,'')
+    .replace(/\s*\(TBC\)/i,' TBC')
+    .replace(/\s*\[.*?\]/g,'')
+    .trim();
+}
+
+/* ── EVENTS / ASSOCIATIONS TABLE ──────────── */
+let _lastEventFile = null;
+
+async function pollDiscovered() {
+  if (running) return;
+  try {
+    const r = await fetch('/api/discovered');
+    const data = await r.json();
+    if (!data.events || !data.events.length) return;
+    const dataMode = data.mode || 'events';
+    if (dataMode !== currentMode) setMode(dataMode);
+    if (data.file === _lastEventFile && selectedIndices.size > 0) {
+      if (data.selected_indices && data.selected_indices.length) {
+        selectedIndices = new Set(data.selected_indices);
+        renderSelection();
+      }
+      return;
+    }
+    _lastEventFile = data.file;
+    allEvents = data.events;
+    selectedIndices = new Set(
+      (data.selected_indices && data.selected_indices.length) ? data.selected_indices : []
+    );
+    renderDiscoveredTable();
+    showPane('events');
+  } catch(_) {}
+}
+
+function renderDiscoveredTable() {
+  const isAssoc = currentMode === 'associations';
+  const label = isAssoc ? 'associations' : 'events';
+  document.getElementById('eventsToolbarTitle').textContent = isAssoc ? 'Discovered Associations' : 'Discovered Events';
+  document.getElementById('eventsCount').textContent = `${allEvents.length} ${label}`;
+
+  document.getElementById('eventsHead').innerHTML = isAssoc
+    ? `<tr><th class="cb-th"></th><th>Association</th><th>City</th><th>Type</th><th>Description</th><th>Categories</th></tr>`
+    : `<tr><th class="cb-th"></th><th>Event</th><th>Date</th><th>Location</th><th>Description</th><th>Categories</th></tr>`;
+
+  const tbody = document.getElementById('eventsBody');
+  tbody.innerHTML = allEvents.map((ev, i) => {
+    const sel = selectedIndices.has(i);
+    const cats = ev.categories || [];
+    const visibleCats = cats.slice(0,2).map(c => `<span class="cat-pill">${esc(c)}</span>`).join('');
+    const overflow = cats.length > 2 ? `<span class="cat-more">+${cats.length-2}</span>` : '';
+    const nameHtml = ev.website_url
+      ? `<a class="name-link" href="${esc(ev.website_url)}" target="_blank" onclick="event.stopPropagation()">${esc(ev.name||'—')}<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 8l6-6M4 2h4v4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>`
+      : esc(ev.name||'—');
+    const col2 = isAssoc
+      ? `<td class="date-col">${esc(ev.city||ev.country||'—')}</td>`
+      : `<td class="date-col">${fmtDate(ev.date)}</td>`;
+    const col3 = isAssoc
+      ? `<td class="loc-col">${esc(ev.type||'—')}</td>`
+      : `<td class="loc-col">${esc(ev.location||'—')}</td>`;
+    return `<tr class="${sel?'selected':''}" id="row-${i}" onclick="toggleSel(${i})">
+      <td class="cb-col"><div class="row-cb${sel?' on':''}" id="badge-${i}">✓</div></td>
+      <td class="name-col">${nameHtml}</td>
+      ${col2}${col3}
+      <td class="desc-col"><div class="desc-clamp">${esc(ev.description||ev.member_focus||'')}</div></td>
+      <td class="cat-col">${visibleCats}${overflow}</td>
+    </tr>`;
+  }).join('');
+  updateSelInfo();
+}
+
+function renderSelection() {
+  allEvents.forEach((_, i) => {
+    const row = document.getElementById(`row-${i}`);
+    const badge = document.getElementById(`badge-${i}`);
+    const sel = selectedIndices.has(i);
+    if (row) row.className = sel ? 'selected' : '';
+    if (badge) badge.className = `row-cb${sel?' on':''}`;
+  });
+  updateSelInfo();
+}
+
+let _selSaveTimer = null;
+function toggleSel(i) {
+  if (selectedIndices.has(i)) selectedIndices.delete(i);
+  else selectedIndices.add(i);
+  renderSelection();
+  clearTimeout(_selSaveTimer);
+  _selSaveTimer = setTimeout(saveSelectionToServer, 300);
+}
+
+async function saveSelectionToServer() {
+  const oneBased = [...selectedIndices].map(i=>i+1).sort((a,b)=>a-b);
+  try {
+    await fetch('/api/select',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({indices:oneBased})});
+  } catch(_) {}
+}
+
+function updateSelInfo() {
+  const n = selectedIndices.size;
+  document.getElementById('selBadge').style.display = n > 0 ? '' : 'none';
+  document.getElementById('selCount').textContent = n;
+  const btn = document.getElementById('crawlBtn');
+  const cnt = document.getElementById('crawlCount');
+  btn.disabled = n === 0;
+  if (n > 0) { cnt.style.display=''; cnt.textContent=n; }
+  else { cnt.style.display='none'; }
+}
+
+/* ── PANES ─────────────────────────────── */
+function showPane(which) {
+  document.getElementById('emptyPane').style.display  = which==='empty'  ? '' : 'none';
+  document.getElementById('eventsPane').style.display = which==='events' ? '' : 'none';
+  document.getElementById('feedPane').style.display   = which==='feed'   ? '' : 'none';
+}
+
+/* ── CRAWL & PIPELINE ─────────────────── */
+async function startCrawl() {
+  if (running) { toast('Already running','err'); return; }
+  if (selectedIndices.size === 0) { toast('Select at least one event','err'); return; }
+  const selected = allEvents.filter((_,i) => selectedIndices.has(i));
+  resetSteps(); _rawBuf.length = 0; Object.keys(_progLines).forEach(k=>delete _progLines[k]);
+  curPhase = 'crawl'; curStep = null; matchFound = 0; matchMiss = 0; matchStarted = false;
+  markStep('sp-d','done');
+  setRunning(true);
+  showPane('feed');
+  const srcLabel = currentMode === 'associations' ? 'association' : 'event';
+  document.getElementById('feedTitle').textContent = `Crawling ${selected.length} ${srcLabel}${selected.length!==1?'s':''}…`;
+  openBlock('sp-c','C','Crawl Events');
+  activateStep('sp-c');
+  try {
+    const r = await fetch('/api/crawl',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({events:selected})});
+    const j = await r.json();
+    if (!j.ok){addEv('sp-c','err',j.error||'failed');setRunning(false);return;}
+  } catch(e){addEv('sp-c','err',e.message);setRunning(false);return;}
+  subscribeSSE();
+}
+
+async function continueToApollo() {
+  document.querySelectorAll('.btn-continue').forEach(el=>el.remove());
+  resetStepRange(['sp1','sp2','sp3','sp4']);
+  _rawBuf.length=0; Object.keys(_progLines).forEach(k=>delete _progLines[k]);
+  curPhase='pipeline'; curStep=null; matchFound=0; matchMiss=0; matchStarted=false;
+  setRunning(true);
+  document.getElementById('feedTitle').textContent='Apollo Enrichment + Campaign Launch…';
+  const opts={config_file:'events_config.yaml',no_prompt:true,
+    dry_run:document.getElementById('o_dryrun').checked,
+    auto_yes:document.getElementById('o_yes').checked,
+    skip_verify:document.getElementById('o_skipverify').checked,
+    campaign_name:gv('o_campaign'),start_from:2,stop_after:5};
+  try {
+    const r=await fetch('/api/run',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(opts)});
+    const j=await r.json();
+    if(!j.ok){addEv('sp-c','err',j.error||'unknown');setRunning(false);return;}
+  } catch(e){addEv('sp-c','err',e.message);setRunning(false);return;}
+  subscribeSSE();
+}
+
+/* ── SSE ───────────────────────────────── */
+function subscribeSSE() {
+  if(evtSrc)evtSrc.close();
+  evtSrc=new EventSource('/api/stream');
+  evtSrc.onmessage=e=>{
+    if(e.data==='[PING]')return;
+    if(e.data==='[DONE]'){onDone(false);return;}
+    if(e.data==='[ERROR]'){onDone(true);return;}
+    handleLine(JSON.parse(e.data).trimEnd());
+  };
+  evtSrc.onerror=()=>{
+    if(running){addEv(curStep||'sp-c','err','Connection lost');setRunning(false);}
+    evtSrc&&evtSrc.close();
+  };
+}
+
+async function stopPipeline() {
+  await fetch('/api/stop',{method:'POST'});
+  if(evtSrc)evtSrc.close();
+  const tid=curStep||(curPhase==='crawl'?'sp-c':'sp-d');
+  addEv(tid,'warn','Stopped by user');
+  setRunning(false);
+}
+
+let _lastRunTs = null;
+function setRunning(v) {
+  running=v;
+  document.getElementById('stopBtn').disabled=!v;
+  document.getElementById('feedStopBtn').disabled=!v;
+  const d=document.getElementById('sdot'),t=document.getElementById('stxt'),ts=document.getElementById('statusTs');
+  d.className='sdot'+(v?' run':'');
+  t.textContent=v?'Running…':'Idle';
+  if(!v && _lastRunTs) {
+    const ago=Math.round((Date.now()-_lastRunTs)/1000);
+    ts.textContent=ago<5?'· just now':`· ${ago}s ago`;
+  } else if(v) {
+    _lastRunTs=Date.now(); ts.textContent='';
+  }
+}
+
+function onDone(isErr) {
+  setRunning(false); evtSrc&&evtSrc.close();
+  if(isErr) {
+    const tid=curStep||(curPhase==='crawl'?'sp-c':'sp-d');
+    markStep(tid,'err');
+    const NOISE=/^(CRAWL:|SCRAPE:|EVENT_START:|FILTER:|STEP \d|={3,}|NEXT:|\s*python3?|pip install|\s*\{|\s*\[)/;
+    const useful=_rawBuf.map(s=>s.trimEnd()).filter(s=>s.trim()&&!NOISE.test(s.trim())).slice(-20);
+    if(useful.length){
+      const c=document.getElementById(`ev-${tid}`);
+      if(c){
+        const lbl=document.createElement('div');
+        lbl.style.cssText='font-size:10px;font-weight:700;text-transform:uppercase;color:var(--rd);padding:6px 10px 3px;opacity:.8';
+        lbl.textContent='Error output';
+        const pre=document.createElement('pre');
+        pre.style.cssText='margin:0 8px 8px;padding:9px 11px;font-size:10.5px;line-height:1.6;color:#FCA5A5;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:5px;overflow-x:auto;white-space:pre-wrap;font-family:var(--mono);word-break:break-word';
+        pre.textContent=useful.join('\n');
+        c.appendChild(lbl);c.appendChild(pre);
+        document.getElementById('feedScroll').scrollTop=99999;
+      }
+    }
+    return;
+  }
+  if(curPhase==='discover'){
+    markStep('sp-d','done');
+    document.getElementById('sdot').className='sdot done';
+    setTimeout(async()=>{_lastEventFile=null;await pollDiscovered();},600);
+  } else if(curPhase==='crawl'){
+    markStep('sp-c','done');
+    document.getElementById('sdot').className='sdot done';
+    showCrawlPreview();
+  } else {
+    if(curStep)markStep(curStep,'done');
+    document.getElementById('sdot').className='sdot done';
+  }
+}
+
+async function showCrawlPreview() {
+  try {
+    const r=await fetch('/api/preview');const data=await r.json();
+    if(!data.rows||!data.rows.length){addEv('sp-c','warn','No contacts found — check event websites');return;}
+    const c=document.getElementById('ev-sp-c');if(!c)return;
+    const allCols=Object.keys(data.rows[0]);
+    const pref=['speaker_first_name','speaker_last_name','speaker_title','company_name','event_name','category'];
+    const cols=pref.filter(k=>allCols.includes(k)).length>=3?pref.filter(k=>allCols.includes(k)):allCols.slice(0,5);
+    const hdrs={speaker_first_name:'First',speaker_last_name:'Last',speaker_title:'Title',company_name:'Company',event_name:'Event',category:'Type'};
+    const rows=data.rows.slice(0,120);
+    const wrap=document.createElement('div');
+    wrap.innerHTML=`
+      <div class="preview-wrap">
+        <div class="preview-hdr">Crawled Contacts<span class="preview-count">${esc(data.file)} · ${data.total} rows</span></div>
+        <div class="preview-scroll"><table class="preview-table">
+          <thead><tr>${cols.map(c=>`<th>${hdrs[c]||c}</th>`).join('')}</tr></thead>
+          <tbody>${rows.map(row=>`<tr>${cols.map(c=>{
+            const v=row[c]||'';
+            if(c==='event_name')return`<td><span class="ev-badge">${esc(v)}</span></td>`;
+            if(c==='company_name')return`<td class="name-col">${esc(v)}</td>`;
+            return`<td>${esc(v)}</td>`;
+          }).join('')}</tr>`).join('')}</tbody>
+        </table></div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin:0 8px 4px">
+        <a class="btn-dl" href="/api/download_csv" target="_blank" style="flex:0 0 auto">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1v8M3 6l3.5 3.5L10 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M1.5 11h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          Download CSV
+        </a>
+        <button class="btn-continue" style="flex:1;margin:0" onclick="continueToApollo()">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 6.5h8M6.5 2.5l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Continue to Apollo Enrichment
+        </button>
+      </div>`;
+    c.appendChild(wrap);
+    document.getElementById('feedScroll').scrollTop=99999;
+  } catch(e){addEv('sp-c','warn','Could not load preview: '+e.message);}
+}
+
+/* ── LINE PARSER ────────────────────────── */
+function stepPillId(n){return 'sp'+(n-1);}
+
+function parseLine(raw){
+  const l=raw.trim();if(!l)return null;
+  const sm=l.match(/^STEP\s+(\d)\/5/);if(sm)return{t:'step',n:+sm[1]};
+  if(l.match(/PIPELINE COMPLETE/))return{t:'done',dry:l.includes('dry')};
+  if(l.match(/PIPELINE STOPPED/))return{t:'stopped'};
+  if(l.match(/PIPELINE PAUSED/))return{t:'paused'};
+  if(l.match(/CRAWL COMPLETE/))return{t:'crawl_done'};
+  if(l.match(/^={3,}|^CMD:|^\s*using:|^NEXT:|python3?\s|pip install/))return null;
+  if(l.match(/^\s*\{|^\s*\[|\(non-JSON/))return null;
+  if(l.match(/^Extraction mode:/))return null;
+  if(l.match(/DISCOVERY COMPLETE/))return{t:'discover_done'};
+  const p=l.split(':');
+  if(p[0]==='DISCOVER'){
+    const sub=p[1];
+    if(sub==='START')return{t:'discover_start',msg:p.slice(2).join(':')};
+    if(sub==='SEARCH')return{t:'discover_search',query:p.slice(2).join(':')};
+    if(sub==='FOUND')return{t:'discover_found',n:+p[2]};
+    if(sub==='PARSE_ERROR'||sub==='ERROR')return{t:'err',msg:p.slice(2).join(':')};
+    return null;
+  }
+  if(p[0]==='CRAWL'){
+    const sub=p[1],name=p[2]||'',rest=p.slice(3).join(':');
+    if(sub==='TOTAL')return{t:'crawl_total',n:+name};
+    if(sub==='START')return{t:'crawl_start',name,url:rest};
+    if(sub==='SKIP')return{t:'crawl_skip',name,reason:rest};
+    if(sub==='FETCH')return{t:'crawl_fetch',name,url:rest};
+    if(sub==='EXTRACT')return{t:'crawl_extract',name,url:rest};
+    if(sub==='FOUND'){const[count,url]=rest.split(':');return{t:'crawl_found',name,count:+count,url};}
+    if(sub==='DONE')return{t:'crawl_event_done',name,count:+rest};
+    if(sub==='ERROR'||sub==='EXTRACT_ERR')return{t:'crawl_err',name,msg:rest};
+    return null;
+  }
+  if(p[0]==='FILTER'){
+    const sub=p[1];
+    if(sub==='NO_COMPANY')return{t:'filter',msg:`${p[2]} rows dropped (no company)`};
+    if(sub==='EXCL_TITLE')return{t:'filter',msg:`${p[2]} titles excluded`};
+    if(sub==='CAP')return{t:'filter',msg:`${p[2]} capped at ${p[3]}/event`};
+    if(sub==='DEDUP')return{t:'filter',msg:`${p[2]} duplicates removed`};
+  }
+  const evStartM=l.match(/^EVENT_START:(\d+):(\d+):(.+)/);
+  if(evStartM)return{t:'ev_start',idx:+evStartM[1],total:+evStartM[2],name:evStartM[3]};
+  const wroteM=l.match(/^Wrote (\d+) contacts?\s*->/);if(wroteM)return{t:'contacts_written',n:+wroteM[1]};
+  const evCovM=l.match(/events covered:\s*(\d+)/);if(evCovM)return{t:'ev_covered',n:+evCovM[1]};
+  const compM=l.match(/companies:\s*(\d+)/);if(compM)return{t:'companies',n:+compM[1]};
+  const mOkM=l.match(/^\s*\[(\d+)\/(\d+)\]\s+matched:\s+(.+?)\s*@\s*(.+)/);
+  if(mOkM)return{t:'match_ok',idx:+mOkM[1],of:+mOkM[2]};
+  const mMissM=l.match(/^\s*\[(\d+)\/(\d+)\]\s+no match:\s+(.+?)\s*@\s*(.+)/);
+  if(mMissM)return{t:'match_miss',idx:+mMissM[1],of:+mMissM[2]};
+  const wroteEnrM=l.match(/^Wrote (\d+) enriched contacts?\s*->/);if(wroteEnrM)return{t:'enriched_written',n:+wroteEnrM[1]};
+  const abM=l.match(/after dropping blank emails:\s*(\d+)/);if(abM)return{t:'clean_blank',n:+abM[1]};
+  const ddM=l.match(/after de-duplicating emails:\s*(\d+)\s*\(removed (\d+)\)/);if(ddM)return{t:'clean_dedup',n:+ddM[1],removed:+ddM[2]};
+  const wclM=l.match(/^Wrote (\d+) clean contacts?\s*->/);if(wclM)return{t:'clean_written',n:+wclM[1]};
+  const l2uM=l.match(/^Leads to upload:\s*(\d+)/);if(l2uM)return{t:'leads_upload',n:+l2uM[1]};
+  const cnM=l.match(/^Campaign name:\s*(.+)/);if(cnM)return{t:'campaign_name',name:cnM[1].trim()};
+  if(l.startsWith('Creating paused campaign'))return{t:'creating'};
+  const progM=l.match(/\.\.\.(\d+)\/(\d+) processed/);if(progM)return{t:'upload_prog',done:+progM[1],total:+progM[2]};
+  const doneM=l.match(/Done\. Campaign '(.+?)' created PAUSED/);if(doneM)return{t:'campaign_done',name:doneM[1]};
+  const laM=l.match(/leads added[^:]*:\s*(\d+)/);if(laM)return{t:'leads_added',n:+laM[1]};
+  const lsM=l.match(/skipped[^:]*:\s*(\d+)/);if(lsM)return{t:'leads_skipped',n:+lsM[1]};
+  const vgM=l.match(/^GET\s+(\S+)\s+->\s+HTTP\s+(\d+)/);if(vgM)return{t:'verify_req',path:vgM[1],code:+vgM[2]};
+  if(l.startsWith('If both returned 200'))return{t:'verify_ok'};
+  if(l.match(/\[DRY RUN\]/))return{t:'dryrun'};
+  if(l.match(/FAILED|401 |403 |429 /))return{t:'err',msg:l};
+  if(l.match(/^\[STOP\]/))return{t:'err',msg:l.replace(/^\[STOP\]\s*/,'')};
+  if(l.match(/^([\w.]+Error|[\w.]+Exception|KeyError|ValueError|TypeError|AttributeError|ImportError):/))return{t:'err',msg:l};
+  return null;
+}
+
+function handleLine(raw){
+  _rawBuf.push(raw);if(_rawBuf.length>40)_rawBuf.shift();
+  const ev=parseLine(raw);if(!ev)return;
+  const cid=curStep||(curPhase==='crawl'?'sp-c':'sp-d');
+  switch(ev.t){
+    case 'discover_start':addEv('sp-d','info',`Searching: ${ev.msg}`);break;
+    case 'discover_search':setPLine('search','sp-d',`Searching: ${ev.query}…`,true);break;
+    case 'discover_found':setPLine('search','sp-d',`✓ Found ${ev.n}`,false);addEv('sp-d','ok',`${ev.n} results discovered`);break;
+    case 'discover_done':break;
+    case 'crawl_total':addEv('sp-c','info',`Crawling ${ev.n} ${currentMode==='associations'?'association':'event'}${ev.n!==1?'s':''}…`);break;
+    case 'ev_start':addEv('sp-c','section',`[${ev.idx}/${ev.total}] ${ev.name}`);break;
+    case 'crawl_start':setPLine('fetch','sp-c',`Starting: ${ev.name}`,true);break;
+    case 'crawl_fetch':setPLine('fetch','sp-c',`Fetching ${shortUrl(ev.url)}…`,true);break;
+    case 'crawl_extract':setPLine('fetch','sp-c',`Extracting from ${shortUrl(ev.url)}…`,true);break;
+    case 'crawl_found':setPLine('fetch','sp-c',`✓ ${ev.count} people at ${shortUrl(ev.url)}`,false);break;
+    case 'crawl_event_done':addEv('sp-c','ok',`${ev.name}: ${ev.count} contacts`);break;
+    case 'crawl_skip':addEv('sp-c','warn',`Skipped ${ev.name}: ${ev.reason}`);break;
+    case 'crawl_err':addEv('sp-c','warn',`${ev.name}: ${ev.msg}`);break;
+    case 'contacts_written':addEv(cid,'ok',`${ev.n} contacts written`);break;
+    case 'ev_covered':addEv(cid,'hint',`Events: ${ev.n}`);break;
+    case 'companies':addEv(cid,'hint',`Companies: ${ev.n}`);break;
+    case 'step':{
+      const pid=stepPillId(ev.n);
+      const names={1:'Apollo Enrich',2:'Clean CSV',3:'Launch Instantly',4:'Verify'};
+      if(curStep)markStep(curStep,'done');
+      curStep=pid; Object.keys(_progLines).forEach(k=>delete _progLines[k]);
+      activateStep(pid);openBlock(pid,ev.n-1,names[ev.n-1]||`Step ${ev.n}`);
+      matchStarted=false;break;
+    }
+    case 'done':if(curStep)markStep(curStep,'done');break;
+    case 'stopped':if(curStep)markStep(curStep,'err');break;
+    case 'paused':if(curStep)markStep(curStep,'done');break;
+    case 'match_ok':{
+      if(!matchStarted){matchStarted=true;}
+      matchFound++;
+      setPLine('match',curStep,`Matching ${ev.idx}/${ev.of}… ${matchFound} found`,true);break;
+    }
+    case 'match_miss':{
+      if(!matchStarted){matchStarted=true;}
+      matchMiss++;
+      setPLine('match',curStep,`Matching ${ev.idx}/${ev.of}… ${matchFound} found, ${matchMiss} missed`,true);break;
+    }
+    case 'enriched_written':
+      setPLine('match',curStep,`✓ ${ev.n} enriched`,false);
+      addSumChips(curStep,[{cls:'gn',label:`${matchFound} matched`},{cls:'rd',label:`${matchMiss} missed`}]);break;
+    case 'clean_blank':addEv(curStep,'ok',`After blank drop: ${ev.n} rows`);break;
+    case 'clean_dedup':addEv(curStep,'ok',`After dedup: ${ev.n} (removed ${ev.removed})`);break;
+    case 'clean_written':addSumChips(curStep,[{cls:'gn',label:`${ev.n} clean contacts`}]);break;
+    case 'leads_upload':addEv(curStep,'info',`Leads to upload: ${ev.n}`);break;
+    case 'campaign_name':addEv(curStep,'info',`Campaign: "${ev.name}"`);break;
+    case 'creating':addEv(curStep,'info','Creating paused campaign…');break;
+    case 'upload_prog':setPLine('upload',curStep,`Uploading: ${ev.done}/${ev.total}`,true);break;
+    case 'campaign_done':setPLine('upload',curStep,`✓ Campaign created PAUSED`,false);break;
+    case 'leads_added':addSumChips(curStep,[{cls:'gn',label:`${ev.n} leads added`}]);break;
+    case 'leads_skipped':if(ev.n>0)addSumChips(curStep,[{cls:'yw',label:`${ev.n} skipped`}]);break;
+    case 'verify_req':addEv(curStep,ev.code===200?'ok':'err',`GET ${ev.path} → HTTP ${ev.code}`);break;
+    case 'verify_ok':addEv(curStep,'ok','API endpoints healthy');break;
+    case 'filter':addEv(cid,'hint',ev.msg);break;
+    case 'err':addEv(cid,'err',ev.msg);break;
+    case 'dryrun':addEv(cid,'warn','[DRY RUN] skipped');break;
+  }
+}
+
+/* ── FEED HELPERS ───────────────────────── */
+function resetSteps(){
+  ['sp-d','sp-c','sp1','sp2','sp3','sp4'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    el.className='step-pill';
+    const sn=el.querySelector('.sn');
+    if(sn)sn.textContent=sn.dataset.lbl||sn.textContent;
+  });
+}
+function resetStepRange(ids){
+  ids.forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    el.className='step-pill';
+    const sn=el.querySelector('.sn');
+    if(sn)sn.textContent=sn.dataset.lbl||sn.textContent;
+  });
+}
+function activateStep(id){
+  const el=document.getElementById(id);if(!el)return;
+  el.className='step-pill active';
+}
+function markStep(id,state){
+  const nid=typeof id==='number'?stepPillId(id):id;
+  const pill=document.getElementById(nid);
+  if(pill){
+    pill.className='step-pill '+state;
+    const sn=pill.querySelector('.sn');
+    if(sn){
+      if(state==='done')sn.textContent='✓';
+      else if(state==='err')sn.textContent='✕';
+      else sn.textContent=sn.dataset.lbl||sn.textContent;
+    }
+  }
+  const block=document.getElementById(`block-${nid}`);
+  if(block){
+    block.className='step-block '+state;
+    const lbl=block.querySelector('.step-status-lbl');
+    if(lbl)lbl.innerHTML=state==='done'?'✓ Done':state==='err'?'✕ Failed':'';
+  }
+}
+const _blocks={};
+function openBlock(pillId,num,name){
+  const scroll=document.getElementById('feedScroll');
+  const id=typeof pillId==='string'?pillId:`sp${pillId}`;
+  const block=document.createElement('div');
+  block.className='step-block';block.id=`block-${id}`;
+  block.innerHTML=`
+    <div class="step-hdr">
+      <div class="step-num-badge">${num}</div>
+      <div class="step-name">${name}</div>
+      <div class="step-status-lbl"><span class="spin">⟳</span> Running</div>
+    </div>
+    <div class="evlog" id="ev-${id}"></div>`;
+  scroll.appendChild(block);_blocks[id]=block;
+  scroll.scrollTop=99999;
+}
+function getEvc(stepId){
+  const id=typeof stepId==='string'?stepId:`sp${stepId}`;
+  return document.getElementById(`ev-${id}`);
+}
+function addEv(stepId,type,msg){
+  const c=getEvc(stepId);if(!c)return;
+  const icons={ok:'✓',warn:'⚠',err:'✕',info:'·',hint:'›',section:'▸'};
+  const div=document.createElement('div');
+  div.className=`ev ${type}`;
+  div.innerHTML=`<span class="ev-ic">${icons[type]||'·'}</span><span class="ev-tx">${esc(msg)}</span>`;
+  if(type==='section')div.style.cssText='font-weight:600;color:var(--dim);margin-top:5px';
+  c.appendChild(div);document.getElementById('feedScroll').scrollTop=99999;
+}
+function setPLine(key,stepId,msg,pulse){
+  const c=getEvc(stepId);if(!c)return;
+  let div=_progLines[key];
+  if(!div){div=document.createElement('div');c.appendChild(div);_progLines[key]=div;}
+  if(pulse){div.className='pline';div.innerHTML=`<div class="pdot"></div><span>${esc(msg)}</span>`;}
+  else{div.className='ev ok';div.innerHTML=`<span class="ev-ic">✓</span><span class="ev-tx">${esc(msg)}</span>`;}
+  document.getElementById('feedScroll').scrollTop=99999;
+}
+function addSumChips(stepId,chips){
+  const c=getEvc(stepId);if(!c)return;
+  const row=document.createElement('div');row.className='sum-row';
+  row.innerHTML=chips.map(ch=>`<span class="sum-chip ${ch.cls}">${esc(ch.label)}</span>`).join('');
+  c.appendChild(row);document.getElementById('feedScroll').scrollTop=99999;
+}
+
+/* ── UTILS ─────────────────────────────── */
+function gv(id){const el=document.getElementById(id);return el?el.value:'';}
+function sv(id,val){const el=document.getElementById(id);if(el)el.value=val;}
+function shortUrl(url){try{const u=new URL(url);return u.hostname+u.pathname.replace(/\/$/,'');}catch(_){return url;}}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function toast(msg,type){
+  const el=document.getElementById('toast');el.textContent=msg;
+  el.className=`toast ${type} show`;setTimeout(()=>el.classList.remove('show'),3000);
+}
+
+/* ── MODE TOGGLE ─────────────────────────── */
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('modeEvents').classList.toggle('active', mode==='events');
+  document.getElementById('modeAssoc').classList.toggle('active', mode==='associations');
+  document.getElementById('discoverEventsForm').style.display = mode==='events' ? '' : 'none';
+  document.getElementById('discoverAssocForm').style.display = mode==='associations' ? '' : 'none';
+  if(mode==='associations'){
+    document.getElementById('emptyIcon').textContent='🏢';
+    document.getElementById('emptyHeading').textContent='Waiting for associations';
+    document.getElementById('emptyMsg').innerHTML='Enter a city and click <strong>Find Associations</strong> to discover industry bodies matching your ICP.';
+  } else {
+    document.getElementById('emptyIcon').textContent='🔍';
+    document.getElementById('emptyHeading').textContent='Waiting for events';
+    document.getElementById('emptyMsg').innerHTML='Enter a prompt and click <strong>Find Events</strong>, or ask Claude Code to push results automatically.';
+  }
+  if(allEvents.length>0 && document.getElementById('eventsPane').style.display!=='none'){
+    renderDiscoveredTable();
+  }
+}
+
+/* ── DISCOVER ────────────────────────────── */
+async function startDiscoverEvents() {
+  if(running){toast('Already running','err');return;}
+  const prompt=gv('discover_prompt_ev').trim();
+  if(!prompt){toast('Enter a search prompt','err');return;}
+  _kickDiscover('events', ()=>fetch('/api/discover',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})}), `Discovering events…`);
+}
+
+async function startDiscoverAssoc() {
+  if(running){toast('Already running','err');return;}
+  const city=gv('assoc_city').trim();
+  if(!city){toast('Enter a city','err');return;}
+  const icp=gv('assoc_icp').trim();
+  const prompt=icp?`${city} ${icp}`:city;
+  _kickDiscover('associations', ()=>fetch('/api/discover_associations',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})}), `Discovering associations in ${city}…`);
+}
+
+async function _kickDiscover(mode, fetchFn, title) {
+  setMode(mode);
+  resetSteps(); _rawBuf.length=0; Object.keys(_progLines).forEach(k=>delete _progLines[k]);
+  curPhase='discover'; curStep=null;
+  setRunning(true);
+  showPane('feed');
+  document.getElementById('feedTitle').textContent=title;
+  openBlock('sp-d','D',mode==='associations'?'Discover Associations':'Discover Events');
+  activateStep('sp-d');
+  try{
+    const r=await fetchFn();
+    const j=await r.json();
+    if(!j.ok){addEv('sp-d','err',j.error||'failed');setRunning(false);return;}
+  }catch(e){addEv('sp-d','err',e.message);setRunning(false);return;}
+  subscribeSSE();
+}
+</script>
+</body>
+</html>

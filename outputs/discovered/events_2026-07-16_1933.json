@@ -1,0 +1,138 @@
+{
+  "prompt": "Finance, investment and fintech events in New York, September 2026 \u2014 curated for Pascal AI Labs",
+  "discovered_at": "2026-07-16T19:33:59.100069",
+  "events": [
+    {
+      "name": "FinovateFall 2026",
+      "date": "September 9\u201311, 2026",
+      "location": "Marriott Marquis Times Square, New York",
+      "website_url": "https://informaconnect.com/finovatefall/",
+      "description": "60+ live fintech product demos, 2,000+ senior decision-makers. AI, embedded finance, open banking, digital banking. One of the densest fintech audiences in the US.",
+      "categories": [
+        "FinTech",
+        "AI in Finance",
+        "Digital Banking",
+        "Payments",
+        "WealthTech"
+      ]
+    },
+    {
+      "name": "Global Volatility Summit 2026",
+      "date": "September 23, 2026",
+      "location": "Hall Des Lumieres, New York",
+      "website_url": "https://www.globalvolatilitysummit.com/",
+      "description": "300+ senior investment professionals from pension funds, insurance, endowments, family offices \u2014 representing $35T+ AUM. Ideal for Pascal AI Labs targeting large allocators.",
+      "categories": [
+        "Hedge Funds",
+        "Asset Management",
+        "Alternatives",
+        "Institutional Investors"
+      ]
+    },
+    {
+      "name": "Global Alts New York 2026",
+      "date": "September 2026 (TBC)",
+      "location": "New York",
+      "website_url": "https://iconnections.io/",
+      "description": "iConnections x Managed Funds Association. 1,000+ institutional allocators and fund managers in curated 1:1 meetings, panels, and keynotes. High-quality LP/GP audience.",
+      "categories": [
+        "Alternative Investments",
+        "Hedge Funds",
+        "Private Equity",
+        "Allocators"
+      ]
+    },
+    {
+      "name": "Private Debt Investor New York Forum 2026",
+      "date": "September 15\u201316, 2026",
+      "location": "New York",
+      "website_url": "https://www.peievents.com/en/",
+      "description": "PEI flagship North American private credit conference. 200+ LPs alongside senior credit managers and allocators. Covers direct lending, CLOs, distressed, and structured credit.",
+      "categories": [
+        "Private Credit",
+        "Private Debt",
+        "Alternative Investments",
+        "Institutional Investors"
+      ]
+    },
+    {
+      "name": "Hedgeweek US Summit 2026",
+      "date": "September 2026 (TBC)",
+      "location": "New York",
+      "website_url": "https://events.hedgeweek.com/us-summit",
+      "description": "Hedge fund leaders roundtables on capital raising, investor engagement, operational scaling, regulation, and disruptive technologies including AI. Curated senior audience.",
+      "categories": [
+        "Hedge Funds",
+        "Asset Management",
+        "Capital Raising",
+        "AI in Finance"
+      ]
+    },
+    {
+      "name": "Venture Capital World Summit New York 2026",
+      "date": "September 30, 2026",
+      "location": "Workspace by Rockefeller Group, New York",
+      "website_url": "https://vcworldsummit.com/tickets/new-york-2026/",
+      "description": "VC pitching sessions, panels, and networking for Series A-stage companies and international growth businesses. Access to VC decision-makers in a focused one-day format.",
+      "categories": [
+        "Venture Capital",
+        "Startups",
+        "Growth Equity",
+        "Fundraising"
+      ]
+    },
+    {
+      "name": "AFIRE Annual Member Meeting 2026",
+      "date": "September 15\u201317, 2026",
+      "location": "New York",
+      "website_url": "https://www.afire.org/",
+      "description": "Annual executive conference for real estate leaders and institutional investors. Draws senior allocators from global pension funds, sovereign wealth, and insurance with real estate mandates.",
+      "categories": [
+        "Real Estate",
+        "Institutional Investors",
+        "Alternative Investments",
+        "Capital Allocation"
+      ]
+    },
+    {
+      "name": "ACI Digital Assets: Compliance & Regulatory Forum 2026",
+      "date": "September 14\u201316, 2026",
+      "location": "New York",
+      "website_url": "https://www.americanconference.com/",
+      "description": "Government officials, crypto firms, exchanges, and legal experts on digital asset compliance and enforcement. Growing crossover with traditional finance AI/data use cases.",
+      "categories": [
+        "Digital Assets",
+        "Crypto",
+        "Regulatory",
+        "Compliance",
+        "FinTech"
+      ]
+    },
+    {
+      "name": "NYU Stern PEVC Conference 2026",
+      "date": "September 2026 (TBC)",
+      "location": "NYU Stern, New York",
+      "website_url": "https://www.nyustern-pevc.com/2026-conference",
+      "description": "PE and VC-focused academic conference drawing practitioners, fund managers, and limited partners. Strong networking with mid-market and emerging manager community in NYC.",
+      "categories": [
+        "Private Equity",
+        "Venture Capital",
+        "Academic",
+        "Emerging Managers"
+      ]
+    },
+    {
+      "name": "New Private Markets Investor Summit North America 2026",
+      "date": "September 2026 (TBC)",
+      "location": "New York",
+      "website_url": "https://www.peievents.com/en/event/new-private-markets-investor-summit-north-america/",
+      "description": "PEI summit focused on next-generation private markets investing \u2014 infrastructure, real assets, private credit, and co-investments. LP-heavy audience from endowments and family offices.",
+      "categories": [
+        "Private Markets",
+        "Infrastructure",
+        "Real Assets",
+        "Institutional Investors"
+      ]
+    }
+  ]
+}

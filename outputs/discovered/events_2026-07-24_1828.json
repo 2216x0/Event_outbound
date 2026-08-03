@@ -1,0 +1,26 @@
+{
+  "prompt": "Private Equity Chicago Forum - marketsgroup.org",
+  "discovered_at": "2026-07-24T18:28:38.935357",
+  "events": [
+    {
+      "name": "6th Private Equity Chicago Forum",
+      "date": "July 2027",
+      "location": "University Club of Chicago",
+      "city": "Chicago, IL",
+      "description": "Join private equity investors, LPs and GPs to discuss fundraising, deal sourcing, value creation and private markets opportunities.",
+      "url": "https://www.marketsgroup.org/forums/private-equity-chicago-forum",
+      "organizer": "Markets Group",
+      "topics": [
+        "Private Equity",
+        "Fundraising",
+        "Deal Sourcing",
+        "Value Creation",
+        "Private Markets",
+        "LPs",
+        "GPs"
+      ],
+      "sector": "Private Equity",
+      "audience": "Investors & Allocators"
+    }
+  ]
+}

@@ -1,0 +1,543 @@
+{
+  "prompt": "events/conferences in September 2026 in USA (finance & investment)",
+  "discovered_at": "2026-07-16T17:15:58.925326",
+  "events": [
+    {
+      "name": "FinovateFall 2026",
+      "date": "September 9\u201311, 2026",
+      "location": "New York, NY",
+      "website_url": "https://informaconnect.com/finovatefall/",
+      "description": "East Coast's premier fintech conference featuring 60+ live product demos and 120+ speakers covering AI, payments, open banking, lending, wealth management, and regtech.",
+      "categories": [
+        "fintech",
+        "banking technology",
+        "payments",
+        "AI in finance",
+        "wealth management"
+      ]
+    },
+    {
+      "name": "SuperReturn US West 2026",
+      "date": "September 14\u201315, 2026",
+      "location": "Beverly Hills, CA",
+      "website_url": "https://informaconnect.com/superreturn-uswest/",
+      "description": "Leading West Coast private markets conference connecting 400+ senior decision-makers including 100+ LPs and 150+ GPs covering PE, private credit, and AI in investing.",
+      "categories": [
+        "private equity",
+        "venture capital",
+        "private credit",
+        "limited partners",
+        "alternative investments"
+      ]
+    },
+    {
+      "name": "23rd Annual West Coast Family Office Wealth Conference",
+      "date": "September 14\u201316, 2026",
+      "location": "Laguna Beach, CA",
+      "website_url": "https://register.institutionalinvestor.com/2026-west-coast-family-office-wealth-conference",
+      "description": "Institutional Investor's premier family office event drawing ~350 senior SFO professionals including CIOs, managing partners, and estate planners.",
+      "categories": [
+        "family office",
+        "wealth management",
+        "private wealth",
+        "alternative investments"
+      ]
+    },
+    {
+      "name": "Future Proof Festival 2026",
+      "date": "September 14\u201317, 2026",
+      "location": "Huntington Beach, CA",
+      "website_url": "https://futureproofhq.com/festival/",
+      "description": "The world's largest wealth festival bringing together ~5,000 financial advisors, asset managers, RIAs, fintechs, and LPs with 50,000+ pre-scheduled meetings.",
+      "categories": [
+        "wealth management",
+        "financial advisors",
+        "RIA",
+        "fintech",
+        "asset management"
+      ]
+    },
+    {
+      "name": "Wealth Management EDGE 2026",
+      "date": "September 14\u201317, 2026",
+      "location": "Huntington Beach, CA",
+      "website_url": "https://informaconnect.com/edge/",
+      "description": "Progressive wealth management conference bringing together 2,000+ decision-makers including 250+ CEOs from RIAs, broker-dealers, family offices, and asset managers.",
+      "categories": [
+        "wealth management",
+        "RIA",
+        "investment strategy",
+        "family office",
+        "asset management"
+      ]
+    },
+    {
+      "name": "PDI New York Forum 2026",
+      "date": "September 15\u201316, 2026",
+      "location": "New York, NY",
+      "website_url": "https://www.peievents.com/en/event/pdi-new-york-forum/",
+      "description": "Largest North American meeting for private debt professionals, drawing 200+ LPs alongside senior credit managers covering direct lending, CLOs, and private credit.",
+      "categories": [
+        "private credit",
+        "direct lending",
+        "alternative investments",
+        "institutional investors",
+        "private debt"
+      ]
+    },
+    {
+      "name": "Barclays Global Financial Services Conference 2026",
+      "date": "September 14\u201315, 2026",
+      "location": "New York, NY",
+      "website_url": "https://home.barclays/investor-relations/reports-and-events/financial-calendar/",
+      "description": "Annual institutional investor conference hosted by Barclays featuring presentations from major financial services executives and sector-specific panels.",
+      "categories": [
+        "financial services",
+        "institutional investors",
+        "investment banking",
+        "banking"
+      ]
+    },
+    {
+      "name": "AFIRE 2026 Annual Member Meeting",
+      "date": "September 15\u201317, 2026",
+      "location": "New York, NY",
+      "website_url": "https://www.afire.org/events/amm2026/",
+      "description": "Annual executive conference for Association of Foreign Investors in Real Estate, bringing together global real estate leaders and institutional investors focused on U.S. commercial real estate.",
+      "categories": [
+        "real estate",
+        "institutional investors",
+        "international investment",
+        "commercial real estate"
+      ]
+    },
+    {
+      "name": "J.P. Morgan Emerging and Frontier Markets Conference 2026",
+      "date": "September 15\u201317, 2026",
+      "location": "New York, NY",
+      "website_url": "https://www.jpmorgan.com/about-us/events-conferences",
+      "description": "J.P. Morgan's investor conference focused on emerging and frontier market investment opportunities, connecting institutional investors with company management teams.",
+      "categories": [
+        "emerging markets",
+        "institutional investors",
+        "investment banking",
+        "global investing"
+      ]
+    },
+    {
+      "name": "ICI Compliance, Risk, and Legal Conference 2026",
+      "date": "September 15\u201317, 2026",
+      "location": "Nashville, TN",
+      "website_url": "https://www.ici.org/events/26-crl",
+      "description": "ICI conference bringing together compliance, risk, and legal professionals from investment management firms alongside regulators to address governance and emerging risks.",
+      "categories": [
+        "compliance",
+        "risk management",
+        "legal",
+        "investment management",
+        "asset management"
+      ]
+    },
+    {
+      "name": "ALIGN 2026: Culture, Connection and the Family Office",
+      "date": "September 16\u201318, 2026",
+      "location": "Dallas, TX",
+      "website_url": "https://www.foley.com/insights/events/2026/09/align-2026-culture-connection-and-the-family-office/",
+      "description": "Family Business Magazine's annual conference for family office leaders covering wealth management, governance, succession planning, and family legacy.",
+      "categories": [
+        "family office",
+        "wealth management",
+        "succession planning",
+        "private wealth",
+        "governance"
+      ]
+    },
+    {
+      "name": "ETA Fintech Policy Forum 2026",
+      "date": "September 17, 2026",
+      "location": "Washington, DC",
+      "website_url": "https://etaevents.electran.org/fintech-policy-forum-2026/",
+      "description": "ETA's flagship gathering at the intersection of financial innovation and public policy, bringing together policymakers, regulators, and fintech industry leaders.",
+      "categories": [
+        "fintech",
+        "financial policy",
+        "payments",
+        "regulation",
+        "digital finance"
+      ]
+    },
+    {
+      "name": "Seattle Venture Capital World Summit 2026",
+      "date": "September 17, 2026",
+      "location": "Seattle, WA",
+      "website_url": "https://vcworldsummit.com/",
+      "description": "Part of the Venture Capital World Summit global series focused on tech innovation, AI, and venture opportunities in the Pacific Northwest.",
+      "categories": [
+        "venture capital",
+        "startups",
+        "technology investing",
+        "AI investing"
+      ]
+    },
+    {
+      "name": "IMN Real Estate CFO & COO Forum East \u2014 12th Annual",
+      "date": "September 17, 2026",
+      "location": "New York, NY",
+      "website_url": "https://informaconnect.com/imn-cfo-east/",
+      "description": "Top annual gathering for real estate CFOs and COOs, connecting 400+ senior decision-makers from owners, operators, investors, and funds to discuss capital strategies and ESG.",
+      "categories": [
+        "real estate",
+        "alternative investments",
+        "CFO/COO",
+        "fund administration"
+      ]
+    },
+    {
+      "name": "Climate Week NYC 2026",
+      "date": "September 20\u201327, 2026",
+      "location": "New York, NY",
+      "website_url": "https://www.climateweeknyc.org/",
+      "description": "The world's largest annual climate event with 100,000+ people across 1,000+ events, with significant programming for investors and asset managers on climate finance and ESG.",
+      "categories": [
+        "ESG",
+        "climate finance",
+        "sustainable investing",
+        "impact investing",
+        "institutional investors"
+      ]
+    },
+    {
+      "name": "Bank Board Forum 2026",
+      "date": "September 20\u201323, 2026",
+      "location": "Austin, TX",
+      "website_url": "https://www.bankdirector.com/product/bank-board-forum-2026/",
+      "description": "Exclusive event for bank directors and senior leaders addressing governance, technology, compliance, and growth challenges facing financial institutions.",
+      "categories": [
+        "banking",
+        "governance",
+        "risk management",
+        "board directors",
+        "financial institutions"
+      ]
+    },
+    {
+      "name": "JOIM Fall 2026 Conference: AI in Finance",
+      "date": "September 20\u201322, 2026",
+      "location": "Atlanta, GA",
+      "website_url": "https://joim.com/conference/upcoming/",
+      "description": "Journal of Investment Management academic-practitioner conference on AI in Finance, designed for portfolio managers, risk managers, plan sponsors, and senior financial executives.",
+      "categories": [
+        "AI in finance",
+        "quantitative finance",
+        "investment management",
+        "machine learning"
+      ]
+    },
+    {
+      "name": "Silicon Valley Venture Capital World Summit 2026",
+      "date": "September 22, 2026",
+      "location": "San Francisco, CA",
+      "website_url": "https://vcworldsummit.com/ticket-event/silicon-valley/",
+      "description": "Global Venture Capital World Summit series event connecting startups and investors for capital acquisition, deal networking, and international growth opportunities.",
+      "categories": [
+        "venture capital",
+        "startups",
+        "technology investing",
+        "angel investing"
+      ]
+    },
+    {
+      "name": "Bank of America Securities 31st Annual Financials CEO Conference",
+      "date": "September 22, 2026",
+      "location": "New York, NY",
+      "website_url": "https://gems.bankofamerica.com/",
+      "description": "Annual institutional investor conference hosted by BofA Securities featuring CEO presentations from major financial services companies across banking, insurance, and fintech.",
+      "categories": [
+        "financial services",
+        "institutional investors",
+        "investment banking",
+        "banking",
+        "insurance"
+      ]
+    },
+    {
+      "name": "Blueprint Vegas 2026",
+      "date": "September 22\u201324, 2026",
+      "location": "Las Vegas, NV",
+      "website_url": "https://blueprintvegas.com/",
+      "description": "Premier PropTech conference bringing together 2,500+ VCs, real estate tech startups, operators, and corporate innovators exploring AI, automation, and proptech investment.",
+      "categories": [
+        "proptech",
+        "real estate technology",
+        "venture capital",
+        "real estate investment"
+      ]
+    },
+    {
+      "name": "J.P. Morgan U.S. All Stars Conference 2026",
+      "date": "September 22\u201323, 2026",
+      "location": "New York, NY",
+      "website_url": "https://www.jpmorgan.com/about-us/events-conferences",
+      "description": "J.P. Morgan's flagship U.S. equities investor conference featuring presentations from top-rated companies and management teams for institutional investors.",
+      "categories": [
+        "equities",
+        "institutional investors",
+        "investment banking",
+        "U.S. markets"
+      ]
+    },
+    {
+      "name": "Global Volatility Summit 2026 \u2014 17th Annual",
+      "date": "September 23, 2026",
+      "location": "New York, NY",
+      "website_url": "https://www.globalvolatilitysummit.com/",
+      "description": "Premier one-day conference uniting 400+ hedge fund managers, institutional investors, and 37+ industry leaders focused on volatility and derivatives markets strategies.",
+      "categories": [
+        "hedge funds",
+        "derivatives",
+        "volatility",
+        "institutional investors",
+        "alternative investments"
+      ]
+    },
+    {
+      "name": "DeVoe Elevate 2026",
+      "date": "September 23\u201325, 2026",
+      "location": "Huntington Beach, CA",
+      "website_url": "https://www.devoeandcompany.com/events/elevate",
+      "description": "Growth-focused conference for RIA owners and firm leaders featuring strategies on sustainable growth, firm resilience, talent management, and client referrals.",
+      "categories": [
+        "RIA",
+        "financial advisors",
+        "wealth management",
+        "M&A",
+        "practice management"
+      ]
+    },
+    {
+      "name": "ALTSDC 2026: Alternative Investment Forum",
+      "date": "September 23\u201324, 2026",
+      "location": "Washington, DC",
+      "website_url": "https://www.marketsgroup.org/forums/altsdc",
+      "description": "Education-focused alternative investment forum co-organized by CAIA Association and CFA Society DC, covering PE, hedge funds, private markets, real assets, ESG, and crypto.",
+      "categories": [
+        "alternative investments",
+        "private equity",
+        "hedge funds",
+        "institutional allocators",
+        "CAIA",
+        "CFA"
+      ]
+    },
+    {
+      "name": "Impact Summit America 2026 \u2014 7th Annual",
+      "date": "September 24, 2026",
+      "location": "New York, NY",
+      "website_url": "https://impactevents.phenixcapitalgroup.com/impact-summit-america",
+      "description": "Invitation-only institutional investor conference during Climate Week NYC focused on impact investing, AI, nature-based solutions, and climate finance.",
+      "categories": [
+        "impact investing",
+        "ESG",
+        "institutional investors",
+        "climate finance",
+        "sustainable investing"
+      ]
+    },
+    {
+      "name": "HFA New York Fall Social 2026",
+      "date": "September 24, 2026",
+      "location": "New York, NY",
+      "website_url": "https://hedgefundassoc.org/upcoming-events/",
+      "description": "Hedge Fund Association networking event hosted by Forvis Mazars bringing together executives from across the alternative investment industry.",
+      "categories": [
+        "hedge funds",
+        "alternative investments",
+        "networking",
+        "investment management"
+      ]
+    },
+    {
+      "name": "10th Annual Fintech Conference \u2014 Federal Reserve Bank of Philadelphia",
+      "date": "September 24\u201325, 2026",
+      "location": "Philadelphia, PA",
+      "website_url": "https://www.philadelphiafed.org/calendar-of-events/10th-annual-fintech-conference",
+      "description": "Hybrid conference co-hosted by the Philly Fed with Wharton and Columbia covering digital assets, blockchain in traditional finance, and fintech policy.",
+      "categories": [
+        "fintech",
+        "digital assets",
+        "blockchain",
+        "financial regulation",
+        "central banking"
+      ]
+    },
+    {
+      "name": "ICI Tax and Accounting Conference 2026",
+      "date": "September 27\u201330, 2026",
+      "location": "Marco Island, FL",
+      "website_url": "https://www.ici.org/events/events-calendar",
+      "description": "ICI's annual conference for 500\u20131,000 in-house tax leaders and accounting directors at investment management firms focused on regulatory updates and accounting standards.",
+      "categories": [
+        "tax",
+        "accounting",
+        "compliance",
+        "investment management",
+        "fund accounting"
+      ]
+    },
+    {
+      "name": "LIMRA Annual Conference 2026",
+      "date": "September 27\u201329, 2026",
+      "location": "Grapevine, TX",
+      "website_url": "https://www.limra.com/en/events/conferences/2026/2026-limra-annual-conference/",
+      "description": "One of the largest gatherings of financial services executives focused on life insurance, annuity, and workplace benefits, addressing AI's impact on the industry.",
+      "categories": [
+        "insurance",
+        "life insurance",
+        "annuities",
+        "workplace benefits",
+        "financial services"
+      ]
+    },
+    {
+      "name": "NAMIC 131st Annual Convention",
+      "date": "September 27\u201330, 2026",
+      "location": "Denver, CO",
+      "website_url": "https://www.namic.org/event/namics-131st-annual-convention/",
+      "description": "Premier gathering for mutual insurance company executives and board directors covering regulatory requirements, operational efficiency, and the mutual insurance model.",
+      "categories": [
+        "insurance",
+        "mutual insurance",
+        "financial services",
+        "governance",
+        "regulation"
+      ]
+    },
+    {
+      "name": "Washington DC Venture Capital World Summit 2026",
+      "date": "September 28, 2026",
+      "location": "Washington, DC",
+      "website_url": "https://www.eventbrite.com/e/washington-dc-2026-venture-capital-world-summit-tickets-1616004877089",
+      "description": "Venture Capital World Summit series connecting entrepreneurs, startups, and investors in Washington DC for capital acquisition and deal networking.",
+      "categories": [
+        "venture capital",
+        "startups",
+        "angel investing",
+        "entrepreneurship"
+      ]
+    },
+    {
+      "name": "Sibos 2026 Miami",
+      "date": "September 28\u2013October 1, 2026",
+      "location": "Miami Beach, FL",
+      "website_url": "https://www.sibos.com/",
+      "description": "SWIFT's flagship global financial services conference drawing 10,000+ senior professionals across banking, payments, securities, and fintech for four days of sessions.",
+      "categories": [
+        "banking",
+        "payments",
+        "fintech",
+        "securities",
+        "AI in finance",
+        "digital assets",
+        "tokenization"
+      ]
+    },
+    {
+      "name": "ITC Vegas 2026 (InsureTech Connect)",
+      "date": "September 29\u2013October 1, 2026",
+      "location": "Las Vegas, NV",
+      "website_url": "https://vegas.insuretechconnect.com/",
+      "description": "The world's largest insurance innovation event drawing 9,000+ attendees and 600+ exhibitors from across the global insurance ecosystem focused on technology transforming insurance.",
+      "categories": [
+        "insurtech",
+        "insurance technology",
+        "financial services",
+        "innovation",
+        "venture capital"
+      ]
+    },
+    {
+      "name": "NAIC Insurance Summit 2026",
+      "date": "September 29\u2013October 2, 2026",
+      "location": "Kansas City, MO",
+      "website_url": "https://content.naic.org/events/insurance-summit",
+      "description": "Premier regulatory insurance conference connecting insurance innovators and regulators to explore emerging technologies and the future of insurance regulation.",
+      "categories": [
+        "insurance regulation",
+        "insurtech",
+        "financial services",
+        "compliance",
+        "regulatory"
+      ]
+    },
+    {
+      "name": "New York Venture Capital World Summit 2026",
+      "date": "September 30, 2026",
+      "location": "New York, NY",
+      "website_url": "https://www.eventbrite.com/e/new-york-2026-venture-capital-world-summit-tickets-1616011777729",
+      "description": "Venture Capital World Summit series event in New York connecting entrepreneurs, startups, and investors for capital acquisition and international growth opportunities.",
+      "categories": [
+        "venture capital",
+        "startups",
+        "angel investing",
+        "entrepreneurship",
+        "technology investing"
+      ]
+    },
+    {
+      "name": "Private Equity Boston Forum 2026",
+      "date": "September 30\u2013October 1, 2026",
+      "location": "Boston, MA",
+      "website_url": "https://www.marketsgroup.org/forums/private-equity-boston-forum",
+      "description": "Education-focused forum convening New England investors, fund managers, and advisors to discuss value creation, secondaries, and GP-led transactions.",
+      "categories": [
+        "private equity",
+        "alternative investments",
+        "limited partners",
+        "secondaries",
+        "fund managers"
+      ]
+    },
+    {
+      "name": "ECHELON Deals & Dealmakers Summit 2026",
+      "date": "September 1\u20133, 2026",
+      "location": "Dana Point, CA",
+      "website_url": "https://www.echelon-partners.com/deals-dealmakers-summit/",
+      "description": "Premier M&A event for wealth management dealmakers bringing together 200+ executives, M&A advisors, and legal professionals focused on RIA mergers and acquisitions.",
+      "categories": [
+        "M&A",
+        "wealth management",
+        "RIA",
+        "private equity",
+        "mergers and acquisitions"
+      ]
+    },
+    {
+      "name": "2026 Financial Services Exchange (IIA)",
+      "date": "August 31\u2013September 1, 2026",
+      "location": "Brooklyn, NY",
+      "website_url": "https://www.theiia.org/en/events/conference/hybrid-conferences/financial-services-exchange/",
+      "description": "Hybrid conference for internal audit, compliance, and risk leaders from top North American financial institutions covering governance, risk, and compliance.",
+      "categories": [
+        "internal audit",
+        "compliance",
+        "risk management",
+        "financial services",
+        "banking"
+      ]
+    },
+    {
+      "name": "FinCon 2026",
+      "date": "September 16\u201318, 2026",
+      "location": "Palm Springs, CA",
+      "website_url": "https://finconexpo.com/",
+      "description": "Principal annual conference for personal finance content creators \u2014 podcasters, YouTubers, bloggers \u2014 alongside financial brands and fintechs.",
+      "categories": [
+        "personal finance",
+        "fintech",
+        "financial education",
+        "content creation",
+        "financial media"
+      ]
+    }
+  ]
+}

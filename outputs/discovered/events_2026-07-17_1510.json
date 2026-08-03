@@ -1,0 +1,87 @@
+{
+  "prompt": "Hong Kong finance, AI & investment events \u2014 last week of July + first week of August 2026 (+ nearby). For Pascal AI Labs.",
+  "discovered_at": "2026-07-17T15:10:20.386609",
+  "events": [
+    {
+      "name": "Wiki Finance Expo Hong Kong 2026",
+      "date": "July 23\u201324, 2026",
+      "location": "Hopewell Hotel, Wan Chai, Hong Kong",
+      "website_url": "https://www.wikiexpo.com/HongKong/2026/en/",
+      "description": "Asia's largest Fintech & Web3.0 event. 12,000+ professionals, 200+ speakers, 100+ exhibitors from 120+ countries. Covers Fintech & AI, crypto, DeFi, FX, next-gen payments, and ESG. Strong overlap with Pascal AI Labs' AI-in-finance positioning. Free registration.",
+      "categories": [
+        "FinTech",
+        "AI in Finance",
+        "Digital Assets",
+        "Web3",
+        "Payments"
+      ]
+    },
+    {
+      "name": "Caproasia Investment Day Hong Kong",
+      "date": "Late July 2026 (TBC)",
+      "location": "Hong Kong",
+      "website_url": "https://my.caproasia.com/investment-day/",
+      "description": "Intimate curated investor event. 20+ CIOs and senior investment professionals, 60%+ single family offices with $300M+ AUM. Covers PE, hedge funds, boutique funds, and private markets. Pascal AI Labs' ideal ICP \u2014 senior allocators making capital decisions.",
+      "categories": [
+        "Private Equity",
+        "Hedge Funds",
+        "Family Office",
+        "Private Markets"
+      ]
+    },
+    {
+      "name": "FSI & AI Hong Kong Summit 2026",
+      "date": "August 2026 (TBC)",
+      "location": "Hong Kong",
+      "website_url": "https://www.cdotrends.com/event/fsi-&-ai-hongkong-summit/2026/",
+      "description": "3rd annual summit for AI and data leaders in banking, financial services, and insurance. C-suite CDOs, CTOs, and heads of AI discussing responsible AI deployment in FSI. Direct audience for Pascal AI Labs' outbound intelligence and AI workflow tools.",
+      "categories": [
+        "AI in Finance",
+        "Banking",
+        "Insurance",
+        "Enterprise AI",
+        "Data Leadership"
+      ]
+    },
+    {
+      "name": "Alternative Investments Summit 2026 \u2014 Hong Kong",
+      "date": "Q3 2026 (TBC)",
+      "location": "Hong Kong",
+      "website_url": "https://asianprivatebanker.com/events/alternative-investments-summit-2026-hong-kong-singapore/",
+      "description": "Asian Private Banker summit targeting family offices, private banks and alt-investment managers \u2014 exactly Pascal AI Labs' ICP. Covers PE, hedge funds, real assets, and structured products. Dual-city format (HK + Singapore). High-quality LP audience.",
+      "categories": [
+        "Alternative Investments",
+        "Family Office",
+        "Private Banking",
+        "Hedge Funds"
+      ]
+    },
+    {
+      "name": "Annual Asia Hong Kong Investors Forum 2026",
+      "date": "October 8, 2026",
+      "location": "Hong Kong",
+      "website_url": "https://10times.com/e1xp-2k1h-1hx8",
+      "description": "Senior investor forum drawing asset managers, allocators, and institutional investors from across Asia. Broad coverage of public and private markets with strong networking. Worth flagging for follow-up \u2014 outside the July/August window but confirmed date.",
+      "categories": [
+        "Asset Management",
+        "Institutional Investors",
+        "Private Markets",
+        "Capital Allocation"
+      ]
+    },
+    {
+      "name": "Bitcoin Hong Kong 2026",
+      "date": "August 27\u201328, 2026",
+      "location": "Hong Kong",
+      "website_url": "https://asia.b.tc/",
+      "description": "BTC Inc.'s flagship Asian Bitcoin conference. Four dedicated summits: institutional adoption & ETFs, tokenization, AI & Robotics, and Web3. Growing crossover between Bitcoin infrastructure and institutional finance \u2014 relevant for Pascal AI Labs' digital asset-adjacent finance audience.",
+      "categories": [
+        "Bitcoin",
+        "Digital Assets",
+        "Institutional Adoption",
+        "AI & Robotics",
+        "Tokenization"
+      ]
+    }
+  ]
+}

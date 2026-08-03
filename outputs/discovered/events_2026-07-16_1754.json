@@ -1,0 +1,139 @@
+{
+  "prompt": "Top 10 APAC events for Pascal AI Labs \u2014 AI company targeting finance and investment firms",
+  "discovered_at": "2026-07-16T17:54:41.017630",
+  "events": [
+    {
+      "name": "SuperReturn Asia 2026",
+      "date": "September 28 \u2013 October 1, 2026",
+      "location": "Marina Bay Sands, Singapore",
+      "website_url": "https://informaconnect.com/superreturnasia/",
+      "description": "Premier private markets conference in Asia. 2,500+ PE/VC professionals, 1,200+ LPs, 1,000+ GPs from 50+ countries. Highest density of decision-makers Pascal AI Labs would target.",
+      "categories": [
+        "Private Equity",
+        "Venture Capital",
+        "Asset Management",
+        "Alternative Investments"
+      ]
+    },
+    {
+      "name": "Asia PE-VC Summit 2026",
+      "date": "September 23\u201324, 2026",
+      "location": "Grand Copthorne Waterfront, Singapore",
+      "website_url": "https://events.dealstreetasia.com/sg-2026/",
+      "description": "DealStreetAsia flagship summit for PE and VC fund managers, LPs, and founders across Southeast Asia. Strong overlap with Pascal AI Labs target buyers.",
+      "categories": [
+        "Private Equity",
+        "Venture Capital",
+        "Emerging Markets"
+      ]
+    },
+    {
+      "name": "Hong Kong FinTech Week x StartmeupHK 2026",
+      "date": "November 2\u20136, 2026",
+      "location": "HKCEC, Hong Kong",
+      "website_url": "https://www.fintechweek.hk/",
+      "description": "Asia's largest fintech gathering. 45,000+ leaders from 120 economies. Covers AI in finance, digital banking, asset management and investment tech. Massive lead-gen opportunity.",
+      "categories": [
+        "FinTech",
+        "AI in Finance",
+        "Banking",
+        "Asset Management",
+        "Investment Tech"
+      ]
+    },
+    {
+      "name": "Singapore FinTech Festival 2026",
+      "date": "November 18\u201320, 2026",
+      "location": "Singapore EXPO, Singapore",
+      "website_url": "https://www.fintechfestival.sg/",
+      "description": "World's largest fintech event organised by MAS. 60,000+ attendees. Heavy on AI-driven finance, wealth management, and institutional adoption. Key for Pascal AI Labs regional visibility.",
+      "categories": [
+        "FinTech",
+        "AI",
+        "Wealth Management",
+        "Institutional Finance",
+        "Regulation"
+      ]
+    },
+    {
+      "name": "Alternative Investments Summit 2026",
+      "date": "Q3/Q4 2026 (TBC)",
+      "location": "Hong Kong / Singapore",
+      "website_url": "https://asianprivatebanker.com/events/alternative-investments-summit-2026-hong-kong-singapore/",
+      "description": "Asian Private Banker summit targeting family offices, private banks and alt-investment managers. Direct audience for Pascal AI Labs outbound intelligence and AI tools.",
+      "categories": [
+        "Alternative Investments",
+        "Private Banking",
+        "Family Office",
+        "Wealth Management"
+      ]
+    },
+    {
+      "name": "SuperAI Singapore 2026",
+      "date": "June 10\u201311, 2026 [PAST \u2014 plan for 2027]",
+      "location": "Marina Bay Sands, Singapore",
+      "website_url": "https://www.superai.com/",
+      "description": "World's largest AI conference. 10,000+ attendees, 1,500 AI companies, 150+ speakers. Strong for AI company positioning, partnerships, and investor meetings.",
+      "categories": [
+        "Artificial Intelligence",
+        "Deep Tech",
+        "Startups",
+        "Investment in AI"
+      ]
+    },
+    {
+      "name": "Money20/20 Asia 2026",
+      "date": "April 21\u201323, 2026 [PAST \u2014 plan for 2027]",
+      "location": "Bangkok, Thailand",
+      "website_url": "https://asia.money2020.com/",
+      "description": "APAC's premier payments and finance deal-making event. 2026 agenda centred on agentic AI economy and capital flows. Strong executive audience from banks and fintechs.",
+      "categories": [
+        "Payments",
+        "FinTech",
+        "Agentic AI",
+        "Banking",
+        "Capital Markets"
+      ]
+    },
+    {
+      "name": "The Asian Banker Summit 2026",
+      "date": "May 13\u201314, 2026 [PAST \u2014 plan for 2027]",
+      "location": "Mandarin Oriental, Kuala Lumpur",
+      "website_url": "https://www.theasianbanker.com/summit2026/",
+      "description": "Theme: Imagining the AI Bank. 800+ senior banking leaders from 200+ organisations. Directly aligned with Pascal AI Labs pitch around AI for finance.",
+      "categories": [
+        "Banking",
+        "AI in Finance",
+        "Digital Transformation",
+        "FinTech"
+      ]
+    },
+    {
+      "name": "AI Summit Singapore at ATxEnterprise 2026",
+      "date": "May 20\u201322, 2026 [PAST \u2014 plan for 2027]",
+      "location": "Singapore EXPO",
+      "website_url": "https://asiatechxsg.com/aisummitsingapore/",
+      "description": "MAS and IMDA co-organised enterprise AI summit. Focused on AI governance and applied use cases in financial services. Excellent for Pascal AI Labs positioning with regulated sectors.",
+      "categories": [
+        "Enterprise AI",
+        "AI Governance",
+        "Financial Services",
+        "Regulation"
+      ]
+    },
+    {
+      "name": "Japan FinTech Week / FIN/SUM",
+      "date": "February\u2013March 2027 (annual)",
+      "location": "Marunouchi, Tokyo",
+      "website_url": "https://www.fsa.go.jp/policy/japanfintechweek/2026/index_en.html",
+      "description": "Japan FSA-organised national fintech week. Policymakers, bank executives, investors, and AI founders. Growing focus on agentic AI and digital assets. Strong entry point into Japan market.",
+      "categories": [
+        "FinTech",
+        "AI",
+        "Digital Assets",
+        "Policy",
+        "Banking"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+contact_type: Event Speaker — Investment Management
+events: []
+contacts_per_event: 200
+apollo_seniorities: []
+exclude_title_keywords:
+- moderator
+- emcee
+- host
+include_industries:
+- financial services
+- investment management
+- venture capital
+- private equity
+- capital markets
+- asset management
+- hedge fund
+- wealth management
+output_prefix: events
